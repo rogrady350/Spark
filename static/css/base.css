@@ -5,7 +5,7 @@ header {
 
 nav {
     padding: 10px;
-    background-color: forestgreen;
+    background-color: purple;
 }
 
 .link-container {
@@ -21,7 +21,7 @@ nav {
 }
 
 .link:hover {
-    color: lightgreen;
+    color: lightblue;
 }
 
 h1 {

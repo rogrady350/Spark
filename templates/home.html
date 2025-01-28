@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% extends 'base.html' %}
+
+    <head>
+        <title>{% block title %}Spark{% endblock %}</title>  <!--title block-->
+
+        {% block scripts %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"> {% endblock %}
+    </head>
+
+    <body>
+        <main>
+            {% block content %}
+                <section>
+                    <div class="main-text">
+                        Get Started on Spark
+                        <br>
+                        <a class="main-link" href="/create-profile">Create Your Profile</a>
+                    </div>
+                </section>
+            {% endblock %}
+        </main>
+    </body>
+</html>
