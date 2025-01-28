@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"> <!--define character encoding-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--scaling for mobile devies-->
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"> <!--ensures page is rendedered in older browswers-->
+        <title>{% block title %}Spark{% endblock %}</title>  <!--title block-->
+
+        <!--styles-->
+        <link rel="stylesheet" href="/client/css/base.css"> <!--common-->
+        {% block scripts %}{% endblock %} <!--page specific-->
+
+        <!--scripts-->
+        {% block scripts %}{% endblock %} <!--page specific-->
+    </head>
+
+    <body>
+        <!--common page header-->
+        <header>
+            <nav class="nav">
+                <div class="link-container">
+                    <a class="link" href="/home">Home</a>
+                    <a class="link" href="/view-profile">Enter Data</a>
+                    <a class="link" href="/view-recommendations">View Data</a>
+                </div>
+            </nav>
+
+            <h1>Spark</h1>
+        </header>
+
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+    </body>
+</html>

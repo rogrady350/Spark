@@ -1,0 +1,72 @@
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+nav {
+    padding: 10px;
+    background-color: forestgreen;
+}
+
+.link-container {
+    text-align: center;
+}
+
+.link {
+    text-align: center;
+    font-size: 18px;
+    color: whitesmoke;
+    padding: 10px 15px;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: lightgreen;
+}
+
+h1 {
+    font-family: 'Arial', sans-serif;
+    font-size: 4rem;   /*rm: root em - adjusts font size reltive to root element font size*/
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: whitesmoke;
+    background-color: forestgreen;
+}
+
+body::before {        /*pseudo-element used to create overlay effect on top of background image*/
+    content: '';      /*creates pseudo-element, empty string*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;     /*vw: viewport width - percentage screen width*/
+    height: 100vh;    /*vh: viewport height*/
+    background: rgba(0, 0, 0, 0.5); /*Dark overlay. r,g,b,opacity*/
+    z-index: -1;      /*stacking order. negative places pseudo-element behind content*/
+}
+
+body{
+    font-family: 'Arial', sans-serif;
+    background-image: url("../img/background.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;   /*keeps background fixed during scrolling*/
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.6;
+    color: blueviolet;
+    background-color: whitesmoke;
+    text-align: center;
+    width: 50vw;
+    padding: 3rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /*shadow*/
+    border-radius: 15px; /*rounded corners*/
+}
