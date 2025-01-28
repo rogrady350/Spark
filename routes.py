@@ -1,6 +1,6 @@
 from flask import render_template
 
-#route to home page
+#routes to pages
 def init_routes(app):
     @app.route("/")
     def home():
@@ -14,6 +14,6 @@ def init_routes(app):
     def view_recommendations():
         return render_template("view-recommendations.html")
     
-    @app.route("/view-recommendations")
+    @app.route("/create-profile")
     def create_profile():
         return render_template("create-profile.html")
