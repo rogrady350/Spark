@@ -7,8 +7,8 @@
         <title>{% block title %}Spark{% endblock %}</title>  <!--title block-->
 
         <!--styles-->
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"> <!--common-->
-        {% block scripts %}{% endblock %} <!--page specific-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"> <!--common styles-->
+        {% block styles %}{% endblock %} <!--page specific styles-->
 
     </head>
 
@@ -18,8 +18,8 @@
             <nav class="nav">
                 <div class="link-container">
                     <a class="link" href="/">Home</a>
-                    <a class="link" href="/view-profile">Enter Data</a>
-                    <a class="link" href="/view-recommendations">View Data</a>
+                    <a class="link" href="/view-profile">My Profile</a>
+                    <a class="link" href="/view-recommendations">Recommendations</a>
                 </div>
             </nav>
 
@@ -29,5 +29,7 @@
         <main>
             {% block content %}{% endblock %}
         </main>
+
+        {% block scripts %}{% endblock %} <!--page specific scripts-->
     </body>
 </html>
