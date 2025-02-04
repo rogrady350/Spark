@@ -37,15 +37,21 @@
             </div>
 
             <div class="form-group">
+                <label for="occupation">Occupation:</label>
+                <input id="age"/>
+            </div>
+
+            <div class="form-group">
                 <label for="geneder">Gender:</label>
-                <select id="gender" name="gender" onchange="otherInput">
+                <select id="gender" name="gender" onchange="toggleOtherInput(this)">
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="nonbinary">Nonbinary</option>
                     <option value="transgender">Transgender</option>
                     <option value="other">Other</option>
-                        <input type="text" id="otherInput" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
-                  </select>
+                </select>
+
+                <input type="text" id="otherInput" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
             </div>
 
             <div class="checkbox-group">
@@ -69,14 +75,59 @@
                     <input type="checkbox" name="all" value="all" id="selectAll" onchange="toggleAll()"> Everyone
                 </label> <br>
             </div>
-            
+
             <div class="form-group">
-                <label for="occupation">Occupation:</label>
-                <input id="age"/>
+                <label for="politics">Political Views:</label>
+                <select id="politics" name="politics" onchange="toggleOtherInput(this)">
+                    <option value="conservative">Conservative</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="liberal">Liberal</option>
+                    <option value="not">Not Political</option>
+                    <option value="other">Other</option>
+                    <option value="not">Prefer not to say</option>
+                  </select>
+
+                  <input type="text" id="otherInput" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
             </div>
 
+            <div class="form-group">
+                <label for="religion">Religion:</label>
+                <select id="religion" name="religion" onchange="toggleOtherInput(this)">
+                    <option value="agnostic">Agnostic</option>
+                    <option value="athiest">Athiest</option>
+                    <option value="buddhist">Budhist</option>
+                    <option value="catholic">Catholic</option>
+                    <option value="christian">Christian</option>
+                    <option value="hindu">Hindu</option>
+                    <option value="jewish">Jewish</option>
+                    <option value="muslim">Muslim</option>
+                    <option value="spiritual">Spiritual</option>
+                    <option value="other">Other</option>
+                    <option value="not">Prefer not to say</option>
+                  </select>
 
+                  <input type="text" id="otherText" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
+            </div>
 
+            <div class="form-group">
+                <label for="children">Family Plans:</label>
+                <select id="children" name="children">
+                    <option value="want">Want children</option>
+                    <option value="open">Open to chidren</option>
+                    <option value="unsure">Not sure yet</option>
+                    <option value="dont">Don't want children</option>
+                    <option value="not">Prefer not to say</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="children">Have children?:</label>
+                <select id="children" name="children">
+                    <option value="yes">Yes</option>
+                    <option value="no">No to chidren</option>
+                    <option value="not">Prefer not to say</option>
+                </select>
+            </div>
             
         </form>
     </div>

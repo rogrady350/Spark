@@ -1,12 +1,12 @@
 //show/hide text bock for other gender
-function otherInput() {
-    var dropdown = document.getElementById("gender");
-    var otherInput = document.getElementById("otherInput");
+function toggleOtherInput(selectElement) {
+    let otherInput = selectElement.nextElementSibling;
 
-    if (dropdown.value === "other") {
+    if (selectElement.value === "other") {
         otherInput.style.display = "block";
     } else {
         otherInput.style.display = "none";
+        otherInput.value = "";
     }
 }
 
