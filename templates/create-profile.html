@@ -11,9 +11,10 @@
 <!--extended body-->
     <!--extended main-->>
     {% block content %}
+    <div class "form-container">
         <h2>Enter Your personal information</h2>
 
-        <form id="profile">
+        <form id="profileForm">
             <!--form boxes-->
             <div class="form-group">
                 <label for="first">First name:</label>
@@ -35,8 +36,50 @@
                 <input type="number" id="age"/>
             </div>
 
+            <div class="form-group">
+                <label for="geneder">Gender:</label>
+                <select id="gender" name="gender" onchange="otherInput">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="nonbinary">Nonbinary</option>
+                    <option value="transgender">Transgender</option>
+                    <option value="other">Other</option>
+                        <input type="text" id="otherInput" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
+                  </select>
+            </div>
+
+            <div class="checkbox-group">
+                <h3>
+                    Who would you like to connect with?
+                    <br> Select all that apply.
+                </h3>
+                <label>
+                    <input type="checkbox" name="men" value="men" class="matchOption"> Men
+                </label>
+                <label>
+                    <input type="checkbox" name="women" value="women" class="matchOption"> Women
+                </label>
+                <label>
+                    <input type="checkbox" name="nonbinary" value="nonbinary" class="matchOption"> Nonbinary
+                </label>
+                <label>
+                    <input type="checkbox" name="transgender" value="transgender" class="matchOption"> Transgender
+                </label>
+                <label>
+                    <input type="checkbox" name="all" value="all" id="selectAll" onchange="toggleAll()"> Everyone
+                </label> <br>
+            </div>
+            
+            <div class="form-group">
+                <label for="occupation">Occupation:</label>
+                <input id="age"/>
+            </div>
+
+
+
             
         </form>
+    </div>
     {% endblock %}
     <!--end main-->
     
