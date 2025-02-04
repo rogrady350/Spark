@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
 
-    <head>
-        <title>{% block title %}Spark{% endblock %}</title>  <!--title block-->
+<!--extended head-->>
+{% block title %}Spark{% endblock %}</title>  <!--title block-->
 
-        {% block scripts %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"> {% endblock %}
-    </head>
+{% block scripts %}<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}"> {% endblock %}
 
-    <body>
-        <main>
-            {% block content %}
-                <section>
-                    <div class="main-text">
-                        Get Started on Spark
-                        <br>
-                        <a class="main-link" href="/create-profile">Create Your Profile</a>
-                    </div>
-                </section>
-            {% endblock %}
-        </main>
-    </body>
-</html>
+<!--extended body-->
+    <!--extended main-->>
+    {% block content %}
+        <section>
+            <div class="main-text">
+                Get Started on Spark
+                <br>
+                <a class="main-link" href="/create-profile">Create Your Profile</a>
+            </div>
+        </section>
+    {% endblock %}
+    <!--end main-->
+<!--end body-->
