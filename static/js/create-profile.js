@@ -29,54 +29,57 @@ document.querySelectorAll(".matchOption").forEach(function(checkbox) {
 });
 
 //submit form
-$("#submit").click(function() {
-    //store checkbox values, by className
+document.addEventListener("DOMContentLoaded", function() {
+    //get selected checkbox values, by className
     function getCheckedValues(className) {
         var selectedValues = [] //array to hold values
 
-        //add values to array
-        $("." + className + ":checked").each(function() {
-            selectedValues.push($(this).val());
+        //add checked values to array
+        document.querySelectorAll("." + className + ":checked").forEach(function(checkbox) {
+            selectedValues.push(checkbox.value);
         });
 
         return selectedValues;
     }
 
-    var profileData =  {
-        first: $('#first').val(),
-        last: $('#last').val(),
-        email: $('#email').val(),
-        age: $('#age').val(),
-        occupation: $('#occupation').val(),
-        gender: $('#gender').val(),
-        matchPreferences: getCheckedValues("matchOption"),
-        politics: $('#politics').val(),
-        religion: $('#religion').val(),
-        wantChildren: $('#wantChildren').val(),
-        haveChildren: $('#haveChildren').val()
-    };
+    //form submission
+    document.getElementById("submit").addEventListener("click", function(event) {
+        event.preventDefault(); //prevent default form sumbission
 
-    //POST - client side add data
-    $.ajax({
-        url: restaurantUrl + "/write-record",
-        type: "post",
-        data: jsonString,
-        success: function(response) {
-            var data = JSON.parse(response);
-            if(data.msg = "SUCCESS") {
+        //collect form data
+        var profileData =  {
+            first: document.getElementById("first").value,
+            last: document.getElementById("last").value,
+            email: document.getElementById("email").value,
+            age: document.getElementById("age").value,
+            occupation: document.getElementById("occupation").value,
+            gender: document.getElementById("gender").value,
+            matchPreferences: getCheckedValues("matchOption"),
+            politics: document.getElementById("politics").value,
+            religion: document.getElementById("religion").value,
+            wantChildren: document.getElementById("wantChildren").value,
+            haveChildren: document.getElementById("haveChildren").value
+        };
+
+        //POST - client side add profile data
+        fetch("/api/create-profile", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(profileData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.msg === "SUCCESS") {
                 alert("Data Saved");
             } else {
                 console.log(data.msg);
             }
-        },
-        error: function(err){
-            console.log(err);
-        }
-    })
-    return false;
-});
+        })
+        .catch(error => console.error("Error:", error));
+    });
 
-//clear entire form
-$("#clear").click(function() {
-    $("#reservation")[0].reset();
+    //clear entire form
+    document.getElementById("clear").addEventListener("click", function() {
+        document.getElementById("reservation").reset();
+    });
 });
