@@ -27,3 +27,56 @@ document.querySelectorAll(".matchOption").forEach(function(checkbox) {
         document.getElementById("selectAll").checked = allChecked;
     });
 });
+
+//submit form
+$("#submit").click(function() {
+    //store checkbox values, by className
+    function getCheckedValues(className) {
+        var selectedValues = [] //array to hold values
+
+        //add values to array
+        $("." + className + ":checked").each(function() {
+            selectedValues.push($(this).val());
+        });
+
+        return selectedValues;
+    }
+
+    var profileData =  {
+        first: $('#first').val(),
+        last: $('#last').val(),
+        email: $('#email').val(),
+        age: $('#age').val(),
+        occupation: $('#occupation').val(),
+        gender: $('#gender').val(),
+        matchPreferences: getCheckedValues("matchOption"),
+        politics: $('#politics').val(),
+        religion: $('#religion').val(),
+        wantChildren: $('#wantChildren').val(),
+        haveChildren: $('#haveChildren').val()
+    };
+
+    //POST - client side add data
+    $.ajax({
+        url: restaurantUrl + "/write-record",
+        type: "post",
+        data: jsonString,
+        success: function(response) {
+            var data = JSON.parse(response);
+            if(data.msg = "SUCCESS") {
+                alert("Data Saved");
+            } else {
+                console.log(data.msg);
+            }
+        },
+        error: function(err){
+            console.log(err);
+        }
+    })
+    return false;
+});
+
+//clear entire form
+$("#clear").click(function() {
+    $("#reservation")[0].reset();
+});
