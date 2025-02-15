@@ -1,4 +1,4 @@
-//show/hide text bock for other gender
+//show/hide text block for other gender
 function toggleOtherInput(selectElement) {
     let otherInput = selectElement.nextElementSibling;
 
@@ -48,6 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         //collect form data
         var profileData =  {
+            username: document.getElementById("username").value,
+            password: document.getElementById("password").value,
             first: document.getElementById("first").value,
             last: document.getElementById("last").value,
             email: document.getElementById("email").value,

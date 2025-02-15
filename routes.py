@@ -1,8 +1,8 @@
 from flask import render_template, request, jsonify
 from service import add_profile
 
-#routes to pages
 def init_routes(app):
+    #routes to pages
     @app.route("/")
     def home():
         return render_template("home.html")
@@ -25,4 +25,10 @@ def init_routes(app):
     def create_profile_api():
         data=request.get_json() #get JSON string from request body
         result = add_profile(data) #insert into MongoDB
-        return jsonify(result)
+        
+        if "Error" in result["msg"]:
+            return jsonify(result), 400  #HTTP 400 (Bad Request) for errors
+        
+        return jsonify(result), 201 #HTTP 201 (Created) for successful profile creations
+    
+    #POST method for

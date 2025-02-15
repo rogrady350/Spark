@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+<!--extended head-->>
+{% block title %}Create Profile{% endblock %}</title>  <!--title block-->
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/create-profile.css') }}"> 
+{% endblock %}
+
+<!--extended body-->
+    <!--extended main-->>
+    {% block content %}
+    
+    {% endblock %}
+    <!--end main-->
+    
+    {% block scripts %}
+        <script src="{{ url_for('static', filename='js/create-profile.js') }}" defer></script>
+    {% endblock %}
+<!--end body-->
