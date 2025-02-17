@@ -31,4 +31,5 @@ def init_routes(app):
         
         return jsonify(result), 201 #HTTP 201 (Created) for successful profile creations
     
-    #POST method for
+    #POST method for login
+    
