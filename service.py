@@ -39,11 +39,12 @@ def add_profile(data):
     
 #verify password for login
 def verify_password(username, password):
-    user = profile_collection.find_one({"username:": username})
+    #find user with entered username in db
+    user = profile_collection.find_one({"username": username})
 
     if user:
-        stored_password = user["password"]
-        if bcrypt.checkpw(password.encode('utf-8'), stored_password):
+        stored_password = user["password"]                            #get hashed password for user from db
+        if bcrypt.checkpw(password.encode('utf-8'), stored_password): #encode entered pw and compare to stored pw
             return {"msg": "Login Successful"}
         else:
             return {"msg": "Incorrect username or passord entered"}

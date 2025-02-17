@@ -10,12 +10,28 @@
     {% block content %}
         <section>
             <div class="main-text">
-                Get Started on Spark
-                <br>
+                <h2>Get Started on Spark</h2>
                 <a class="main-link" href="/create-profile">Create Your Profile</a>
-            </div>
 
-            <div
+                <form id="login">
+                    <h3>Already a Member? Login:</h3>
+                    
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input id="username" name="username" required/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password" required/>
+                    </div>
+
+                    <div class="button-container">
+                        <button id="submit">Login</button>
+                    </div>
+
+                </form>
+            </div>
         </section>
     {% endblock %}
     <!--end main-->
