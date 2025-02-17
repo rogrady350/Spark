@@ -37,3 +37,15 @@ def add_profile(data):
     except Exception as e:
         return {"msg": f"Error: {e}"}
     
+#verify password for login
+def verify_password(username, password):
+    user = profile_collection.find_one({"username:": username})
+
+    if user:
+        stored_password = user["password"]
+        if bcrypt.checkpw(password.encode('utf-8'), stored_password):
+            return {"msg": "Login Successful"}
+        else:
+            return {"msg": "Incorrect username or passord entered"}
+    else:
+        return {"msg": "Incorrect username or password entered"}
