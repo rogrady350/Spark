@@ -16,9 +16,9 @@ def user_exists(email, username):
 #insert data sent from create-profile form
 def add_profile(data):
     try:
-        email = data.get("email")
         username = data.get("username")
         password = data.get("password")
+        email = data.get("email")
 
         #make sure email, username, pw is entered
         if not email or not username or not password:
@@ -30,6 +30,18 @@ def add_profile(data):
         
         #hash user entered plaintext pw before storing
         data["password"] = hash_password(password)
+
+        profile_template = {
+            #fileds required for account creation
+            "username": username,
+            "password": data["password"],
+            "email": email,
+            "first": data.get("first"),
+            "last": data.get("last"),
+            "age": data.get("age"),
+
+            #additional information fields left blank on creation
+        }
 
         #add JSON object to "profiles" collection
         profile_collection.insert_one(data)

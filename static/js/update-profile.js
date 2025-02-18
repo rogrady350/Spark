@@ -63,9 +63,9 @@ document.addEventListener("DOMContentLoaded", function() {
             haveChildren: document.getElementById("haveChildren").value
         };
 
-        //POST - client side add profile data
+        //PUT - client side add profile data
         fetch("/api/create-profile", {
-            method: "POST",
+            method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(profileData)
         })
@@ -82,6 +82,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //clear entire form
     document.getElementById("clear").addEventListener("click", function() {
-        document.getElementById("reservation").reset();
+        document.getElementById("profileForm").reset();
+    });
+
+    //cancel filling out profile and return to home page
+    document.getElementById("cancel").addEventListener("click", function() {
+        window.location.replace("/view-profile");
     });
 });
