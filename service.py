@@ -41,6 +41,13 @@ def add_profile(data):
             "age": data.get("age"),
 
             #additional information fields left blank on creation
+            "occupation": data.get(None),
+            "gender": data.get(None),
+            "matchPreferences": data.get(None),
+            "politics": data.get(None),
+            "religion": data.get(None),
+            "wantChildren": data.get(None),
+            "haveChildren": data.get(None)
         }
 
         #add JSON object to "profiles" collection
