@@ -27,12 +27,15 @@
                     </div>
 
                     <div class="button-container">
-                        <button id="submit">Login</button>
+                        <button id="login-btn">Login</button>
                     </div>
-
                 </form>
             </div>
         </section>
     {% endblock %}
     <!--end main-->
+
+    {% block scripts %}
+        <script src="{{ url_for('static', filename='js/home.js') }}" defer></script>
+    {% endblock %}
 <!--end body-->

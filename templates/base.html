@@ -18,8 +18,9 @@
             <nav class="nav">
                 <div class="link-container">
                     <a class="link" href="/">Home</a>
-                    <a class="link" href="/view-profile">My Profile</a>
-                    <a class="link" href="/view-recommendations">Recommendations</a>
+                    <a class="link" href="/view-profile" id="profile-link">My Profile</a>
+                    <a class="link" href="/view-recommendations" id="recommendations-link">Recommendations</a>
+                    <a href="/" id="logout-btn">Logout</a>
                 </div>
             </nav>
 
@@ -30,6 +31,7 @@
             {% block content %}{% endblock %}
         </main>
 
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
         {% block scripts %}{% endblock %} <!--page specific scripts-->
     </body>
 </html>

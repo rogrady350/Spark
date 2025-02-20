@@ -5,9 +5,9 @@ client = MongoClient("mongodb://localhost:27017/") #db connection
 db = client['spark']                               #select 'spark' db
 profile_collection = db['profiles']                #colection (table) to store profile data
 
-#hash password, generate and add salt (random data), store hash as a string
+#hash password, generate and add salt (random data), stored as bytes
 def hash_password(password):
-    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
 #check if profile with email or username already existing in db
 def user_exists(email, username):
@@ -50,22 +50,21 @@ def add_profile(data):
             "haveChildren": data.get(None)
         }
 
-        #add JSON object to "profiles" collection
-        profile_collection.insert_one(data)
+        profile_collection.insert_one(data) #add JSON object to "profiles" collection
         return {"msg": "SUCCESS"}
     except Exception as e:
         return {"msg": f"Error: {e}"}
     
 #verify password for login
 def verify_password(username, password):
-    #find user with entered username in db
-    user = profile_collection.find_one({"username": username})
+    user = profile_collection.find_one({"username": username}) #find user with entered username in db
 
     if user:
-        stored_password = user["password"]                            #get hashed password for user from db
-        if bcrypt.checkpw(password.encode('utf-8'), stored_password): #encode entered pw and compare to stored pw
-            return {"msg": "Login Successful"}
+        stored_password = user["password"] #get hashed password for user from db
+        if bcrypt.checkpw(password.encode('utf-8'), stored_password): #encode entered plaintext pw and compare to stored pw
+            return {"success": True, "user_id": str(user["_id"]), "msg": "Login Successful"} #return Mongo's ObjectId as a string if correct pw entered
         else:
-            return {"msg": "Incorrect username or passord entered"}
+            return {"success": False, "msg": "Incorrect username or password"} #return false for inccorect pw entered
     else:
-        return {"msg": "Incorrect username or password entered"}
+        return {"success": False, "msg": "Incorrect username or password"} #return false for username not in db
+
