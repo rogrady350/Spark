@@ -23,7 +23,7 @@ def init_routes(app):
     def create_account():
         return render_template("create-account.html")
     
-    #API routes for crud operations (handle front end ajax requests)
+    #API routes for crud operations (handle front end requests)
     #POST method for submitting data to db, server side create-account form
     @app.route("/api/create-account", methods=["POST"])
     def create_account_api():
