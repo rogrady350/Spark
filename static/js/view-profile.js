@@ -8,7 +8,10 @@ document.addEventListener("DOMContentLoaded", function() {
 //GET - client side display profile data. only runs if user logged in
 fetch("/api/view-profile", {
     method: "GET",
-    headers: { "Content-Type": "application/json" }
+    headers: { 
+        "Content-Type": "application/json" ,
+        "User-Id": localStorage.getItem("user_id")
+    }
 })
 .then(response => response.json())
 .then(data => {

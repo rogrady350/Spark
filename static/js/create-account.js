@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
             age: document.getElementById("age").value,
         };
 
-        //POST - client side create account data
+        //POST - client side create-account data
         fetch("/api/create-account", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             if (data.msg === "SUCCESS") {
                 alert("Data Saved");
+                window.location.href = "/"; //redirect to home page
             } else {
                 console.log(data.msg);
             }

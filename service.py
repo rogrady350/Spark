@@ -13,7 +13,7 @@ def hash_password(password):
 def user_exists(email, username):
     return profile_collection.find_one({"$or": [{"email": email}, {"username": username}]}) is not None
 
-#insert data sent from create-profile form
+#insert data sent from create-profile form int db
 def add_profile(data):
     try:
         username = data.get("username")
@@ -68,3 +68,17 @@ def verify_password(username, password):
     else:
         return {"success": False, "msg": "Incorrect username or password"} #return false for username not in db
 
+#retrieve personal profile data (logged in user) from db
+def get_profile(user_id):
+    if not user_id:
+        return {"error: Unauthorized"} #handle error for no user_id provided
+    
+    user = profile_collection.find_one(
+        {"_id": user_id}, #find user matching this id
+        {"_id": 0, "username": 1, "first": 1, "last": 1, "email": 1, "age": 1} #return values from db with 1
+    )
+
+    if not user:
+        return {"error": "User not found"}
+    
+    return user 
