@@ -75,8 +75,9 @@ def get_profile(user_id):
     
     user = profile_collection.find_one(
         {"_id": user_id}, #find user matching this id
-        {"_id": 0, "username": 1, "first": 1, "last": 1, "email": 1, "age": 1} #return values from db with 1
+        {"_id": 0, "username": 1, "password": 0, "first": 1, "last": 1, "email": 1, "age": 1} #return values from db with 1
     )
+    print(user)
 
     if not user:
         return {"error": "User not found"}
