@@ -24,6 +24,10 @@ nav {
     color: lightblue;
 }
 
+#logout-btn {
+    color: lightskyblue
+}
+
 h1 {
     font-family: 'Arial', sans-serif;
     font-size: 4rem;   /*rm: root em - adjusts font size reltive to root element font size*/
@@ -56,6 +60,8 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    flex-direction: column;
 }
 
 .main-text {
@@ -69,4 +75,18 @@ main {
     padding: 3rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /*shadow*/
     border-radius: 15px; /*rounded corners*/
+}
+
+button {
+    background-color: purple;
+    color: whitesmoke;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px
 }

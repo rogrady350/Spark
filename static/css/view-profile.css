@@ -1,0 +1,35 @@
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: whitesmoke;
+    background-color: purple;
+    text-align: center;
+    margin: 0 auto 20px auto;
+    display: block;
+    width: 30%;
+    padding: 10px 0;
+}
+
+#profileContainer {
+    display: block;
+    width: fit-content;
+    margin: 10px auto;
+    text-align: left;
+    background-color: aliceblue;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/*have link look like a button*/
+.link-btn {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: purple;
+    color: whitesmoke;
+    text-align: center;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+}

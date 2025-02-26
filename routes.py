@@ -51,7 +51,6 @@ def init_routes(app):
     def view_profile_api():
         #return other user if queried, otherwise return logged in user
         user_id = request.headers.get("User-Id")
-        print (user_id)
 
         profile_data = get_profile(user_id)  #function to retrieve profile info from db
 

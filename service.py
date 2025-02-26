@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from bson import ObjectId
 import bcrypt #password-hasing library to store passwords
 
 client = MongoClient("mongodb://localhost:27017/") #db connection
@@ -71,13 +72,17 @@ def verify_password(username, password):
 #retrieve personal profile data (logged in user) from db
 def get_profile(user_id):
     if not user_id:
-        return {"error: Unauthorized"} #handle error for no user_id provided
+        return {"error": "Unauthorized"} #handle error for no user_id provided
+    
+    try:
+        user_object_id = ObjectId(user_id) #convert user_id, stored as Object id in Mongo
+    except Exception:
+        return {"error": "Invalid User ID"}
     
     user = profile_collection.find_one(
-        {"_id": user_id}, #find user matching this id
-        {"_id": 0, "username": 1, "password": 0, "first": 1, "last": 1, "email": 1, "age": 1} #return values from db with 1
+        {"_id": user_object_id}, #find user matching this id
+        {"_id": 0, "username": 1, "first": 1, "last": 1, "email": 1, "age": 1} #return values from db with 1
     )
-    print(user)
 
     if not user:
         return {"error": "User not found"}

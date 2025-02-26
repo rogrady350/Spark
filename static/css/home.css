@@ -13,17 +13,3 @@
     text-align: center;
     width: 100%;
 }
-
-button {
-    background-color: purple;
-    color: whitesmoke;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-}
-
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px
-}
