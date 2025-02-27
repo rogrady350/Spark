@@ -35,8 +35,8 @@ h2 {
 /*main form options styling (text boxes, drop downs)*/
 .form-group {
     display: flex;
-    flex-direction: flex-start; /*align content to left*/
-    align-items: center;
+    flex-direction: row;
+    align-items: flext start;
     gap: 10px; /*spacing between fields*/
     width: 100%;
 }

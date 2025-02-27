@@ -32,25 +32,6 @@ def add_profile(data):
         #hash user entered plaintext pw before storing
         data["password"] = hash_password(password)
 
-        profile_template = {
-            #fileds required for account creation
-            "username": username,
-            "password": data["password"],
-            "email": email,
-            "first": data.get("first"),
-            "last": data.get("last"),
-            "age": data.get("age"),
-
-            #additional information fields left blank on creation
-            "occupation": data.get(None),
-            "gender": data.get(None),
-            "matchPreferences": data.get(None),
-            "politics": data.get(None),
-            "religion": data.get(None),
-            "wantChildren": data.get(None),
-            "haveChildren": data.get(None)
-        }
-
         profile_collection.insert_one(data) #add JSON object to "profiles" collection
         return {"msg": "SUCCESS"}
     except Exception as e:
@@ -79,12 +60,14 @@ def get_profile(user_id):
     except Exception:
         return {"error": "Invalid User ID"}
     
-    user = profile_collection.find_one(
-        {"_id": user_object_id}, #find user matching this id
-        {"_id": 0, "username": 1, "first": 1, "last": 1, "email": 1, "age": 1} #return values from db with 1
-    )
+    user = profile_collection.find_one({"_id": user_object_id})
 
-    if not user:
-        return {"error": "User not found"}
-    
-    return user 
+    if user:
+        user.pop("_id", None)  #remove _id
+        user.pop("password", None) #remove password
+        print("Retrieved user data:", user)
+        return user
+
+    return {"error": "User not found"}
+
+#def update_profile(user_id)

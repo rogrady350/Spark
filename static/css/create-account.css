@@ -9,7 +9,7 @@
 
 h2 {
     font-family: 'Arial', sans-serif;
-    font-size: 2rem;   /*rm: root em - adjusts font size reltive to root element font size*/
+    font-size: 2rem; /*rm: root em - adjusts font size reltive to root element font size*/
     font-weight: bold;
     letter-spacing: 2px;
     color: whitesmoke;
@@ -36,8 +36,8 @@ h2 {
 /*main form options styling (text boxes, drop downs)*/
 .form-group {
     display: flex;
-    flex-direction: flex-start; /*align content to left*/
-    align-items: center;
+    flex-direction: row; /*align content to left*/
+    align-items: flex-start;
     gap: 10px; /*spacing between fields*/
     width: 100%;
 }
@@ -55,14 +55,6 @@ input {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
-}
-
-/*check box group specific styling*/
-.checkbox-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
 }
 
 /*button styling*/

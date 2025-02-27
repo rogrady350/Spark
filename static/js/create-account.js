@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
             first: document.getElementById("first").value,
             last: document.getElementById("last").value,
             email: document.getElementById("email").value,
-            age: document.getElementById("age").value,
+            age: document.getElementById("age").value
         };
 
         //POST - client side create-account data
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //clear entire form
     document.getElementById("clear").addEventListener("click", function() {
-        document.getElementById("profileForm").reset();
+        document.getElementById("accountForm").reset();
     });
 
     //cancel filling out profile and return to home page

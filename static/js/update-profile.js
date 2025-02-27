@@ -48,31 +48,40 @@ document.addEventListener("DOMContentLoaded", function() {
 
         //collect form data
         var profileData =  {
-            username: document.getElementById("username").value,
-            password: document.getElementById("password").value,
-            first: document.getElementById("first").value,
-            last: document.getElementById("last").value,
-            email: document.getElementById("email").value,
-            age: document.getElementById("age").value,
-            occupation: document.getElementById("occupation").value,
-            gender: document.getElementById("gender").value,
-            matchPreferences: getCheckedValues("matchOption"),
-            politics: document.getElementById("politics").value,
-            religion: document.getElementById("religion").value,
-            wantChildren: document.getElementById("wantChildren").value,
-            haveChildren: document.getElementById("haveChildren").value
+            username: document.getElementById("username").value || undefined,
+            password: document.getElementById("password").value || undefined,
+            first: document.getElementById("first").value || undefined,
+            last: document.getElementById("last").value || undefined,
+            email: document.getElementById("email").value || undefined,
+            age: document.getElementById("age").value || undefined,
+            occupation: document.getElementById("occupation").value || undefined,
+            gender: document.getElementById("gender").value || undefined,
+            matchPreferences: getCheckedValues("matchOption") || undefined,
+            politics: document.getElementById("politics").value || undefined,
+            religion: document.getElementById("religion").value || undefined,
+            wantChildren: document.getElementById("wantChildren").value || undefined,
+            haveChildren: document.getElementById("haveChildren").value || undefined
         };
 
-        //PUT - client side add profile data
-        fetch("/api/create-profile", {
+        /*remove fileds from that were not filled out from submission
+          prevent overwriting existing data with blank or null values*/
+        Object.keys(profileData).forEach(key => {
+            if (profileData[key] == undefined) {
+                delete profileData[key];
+            }
+        });
+
+        //PUT - client side update profile data
+        fetch("/api/update-profile", {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "User-Id": localStorage.getItem("user_id") },
             body: JSON.stringify(profileData)
         })
         .then(response => response.json())
         .then(data => {
             if (data.msg === "SUCCESS") {
-                alert("Data Saved");
+                alert("Profile Updated");
+                window.location.href = "/view-profile"
             } else {
                 console.log(data.msg);
             }

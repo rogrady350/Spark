@@ -27,7 +27,7 @@ def init_routes(app):
     #POST method for submitting data to db, server side create-account form
     @app.route("/api/create-account", methods=["POST"])
     def create_account_api():
-        data = request.json() #get JSON string from request body
+        data = request.get_json() #get JSON string from request body
         result = add_profile(data) #call function to insert into MongoDB
         
         if "Error" in result["msg"]:
@@ -59,4 +59,4 @@ def init_routes(app):
             status_code = 401 if profile_data["error"] == "Unauthorized" else 404
             return jsonify(profile_data), status_code
 
-        return jsonify(profile_data)  #Return user profile data as JSON string
+        return jsonify(profile_data)  #return user profile data as JSON string

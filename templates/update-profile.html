@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-<!--extended head-->>
-{% block title %}Create Profile{% endblock %}</title>  <!--title block-->
+<!--extended head-->
+{% block title %}Update Profile{% endblock %}</title>  <!--title block-->
 
 {% block styles %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/create-profile.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/update-profile.css') }}"> 
 {% endblock %}
 
 <!--extended body-->
-    <!--extended main-->>
+    <!--extended main-->
     {% block content %}
     <div class "form-container">
         <h2>Enter Your personal information</h2>
@@ -55,6 +55,7 @@
             <div class="form-group">
                 <label for="geneder">Gender:</label>
                 <select id="gender" name="gender" onchange="toggleOtherInput(this)">
+                    <option value ="">"Please Select"</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="nonbinary">Nonbinary</option>
@@ -62,7 +63,7 @@
                     <option value="other">Other</option>
                 </select>
 
-                <input type="text" id="otherInput" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
+                <input type="text" id="otherInputGender" name="otherTextGender" placeholder="Please specify or leave blank" style="display: none;">
             </div>
 
             <div class="checkbox-group">
@@ -90,6 +91,7 @@
             <div class="form-group">
                 <label for="politics">Political Views:</label>
                 <select id="politics" name="politics" onchange="toggleOtherInput(this)">
+                    <option value ="">"Please Select"</option>
                     <option value="conservative">Conservative</option>
                     <option value="moderate">Moderate</option>
                     <option value="liberal">Liberal</option>
@@ -98,12 +100,13 @@
                     <option value="not">Prefer not to say</option>
                   </select>
 
-                  <input type="text" id="otherInput" name="otherText" placeholder="Please specify or leave blank" style="display: none;">
+                  <input type="text" id="otherInputPolitics" name="otherTextPolitics" placeholder="Please specify or leave blank" style="display: none;">
             </div>
 
             <div class="form-group">
                 <label for="religion">Religion:</label>
                 <select id="religion" name="religion" onchange="toggleOtherInput(this)">
+                    <option value ="">"Please Select"</option>
                     <option value="agnostic">Agnostic</option>
                     <option value="athiest">Athiest</option>
                     <option value="buddhist">Budhist</option>
@@ -123,6 +126,7 @@
             <div class="form-group">
                 <label for="wantChildren">Family Plans:</label>
                 <select id="wantChildren" name="wantChildren">
+                    <option value ="">"Please Select"</option>
                     <option value="want">Want children</option>
                     <option value="open">Open to chidren</option>
                     <option value="unsure">Not sure yet</option>
@@ -134,6 +138,7 @@
             <div class="form-group">
                 <label for="haveChildren">Have children?:</label>
                 <select id="haveChildren" name="haveChildren">
+                    <option value ="">"Please Select"</option>
                     <option value="yes">Yes</option>
                     <option value="no">No</option>
                     <option value="not">Prefer not to say</option>
@@ -153,6 +158,6 @@
     <!--end main-->
     
     {% block scripts %}
-        <script src="{{ url_for('static', filename='js/create-profile.js') }}" defer></script>
+        <script src="{{ url_for('static', filename='js/update-profile.js') }}" defer></script>
     {% endblock %}
 <!--end body-->
