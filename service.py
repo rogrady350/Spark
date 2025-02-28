@@ -14,7 +14,7 @@ def hash_password(password):
 def user_exists(email, username):
     return profile_collection.find_one({"$or": [{"email": email}, {"username": username}]}) is not None
 
-#insert data sent from create-profile form int db
+#add data sent from create-profile form into new db collection
 def add_profile(data):
     try:
         username = data.get("username")
@@ -33,7 +33,7 @@ def add_profile(data):
         data["password"] = hash_password(password)
 
         profile_collection.insert_one(data) #add JSON object to "profiles" collection
-        return {"msg": "SUCCESS"}
+        return {"msg": "profile created successfully"}
     except Exception as e:
         return {"msg": f"Error: {e}"}
     
@@ -55,11 +55,13 @@ def get_profile(user_id):
     if not user_id:
         return {"error": "Unauthorized"} #handle error for no user_id provided
     
+    #convert user_id, stored as Object id in Mongo
     try:
-        user_object_id = ObjectId(user_id) #convert user_id, stored as Object id in Mongo
+        user_object_id = ObjectId(user_id)
     except Exception:
         return {"error": "Invalid User ID"}
     
+    #find user profile
     user = profile_collection.find_one({"_id": user_object_id})
 
     if user:
@@ -70,4 +72,31 @@ def get_profile(user_id):
 
     return {"error": "User not found"}
 
-#def update_profile(user_id)
+#update personal profile data from update-profile form (logged in user) in db
+def update_profile(user_id, updated_data):
+    #data from form to updated. exclude fields with None values.
+    # prevent overwriting currently saved info without user needing to fill out every field
+    update_data = {key: value for key, value in updated_data.items() if value is not None}
+
+    if not user_id:
+        return {"error": "Unauthorized"}
+    
+    if not update_data:
+        return {"error": "No data to update"}
+    
+    #convert user_id, stored as Object id in Mongo
+    try:
+        user_object_id = ObjectId(user_id)
+    except Exception:
+        return {"error": "Invalid User ID"}
+
+    #update db collection
+    result = profile_collection.update_one(
+        {"_id": user_object_id},
+        {"$set": update_data}
+    )
+
+    if result.matched_count:
+        return {"msg": "Profile updated sucessfully"}
+    
+    return {"error": "User not found"}
