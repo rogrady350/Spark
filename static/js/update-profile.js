@@ -79,9 +79,9 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.msg === "SUCCESS") {
+            if (data.msg === "profile updated sucessfully") {
                 alert("Profile Updated");
-                window.location.href = "/view-profile"
+                window.location.href = "/view-profile";
             } else {
                 console.log(data.msg);
             }

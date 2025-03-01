@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify
-from service import add_profile, verify_password, get_profile
+from service import add_profile, verify_password, get_profile, update_info
 
 def init_routes(app):
     #routes to pages
@@ -68,7 +68,7 @@ def init_routes(app):
         user_id = request.headers.get("User-Id")
         data = request.json  #get JSON data from request body
 
-        result = update_profile(user_id, data)
+        result = update_info(user_id, data)
 
         if "error" in data:
             status_code = (

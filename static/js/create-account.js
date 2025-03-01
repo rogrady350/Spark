@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(response => response.json())
         .then(data => {
-            if (data.msg === "SUCCESS") {
+            if (data.msg === "profile created successfully") {
                 alert("Data Saved");
                 window.location.href = "/"; //redirect to home page
             } else {
@@ -39,6 +39,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     //cancel filling out profile and return to home page
     document.getElementById("cancel").addEventListener("click", function() {
-        window.location.href = "/";
+        window.location.replace("/");
     });
 });

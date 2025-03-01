@@ -73,7 +73,7 @@ def get_profile(user_id):
     return {"error": "User not found"}
 
 #update personal profile data from update-profile form (logged in user) in db
-def update_profile(user_id, updated_data):
+def update_info(user_id, updated_data):
     #data from form to updated. exclude fields with None values.
     # prevent overwriting currently saved info without user needing to fill out every field
     update_data = {key: value for key, value in updated_data.items() if value is not None}
@@ -97,6 +97,6 @@ def update_profile(user_id, updated_data):
     )
 
     if result.matched_count:
-        return {"msg": "Profile updated sucessfully"}
+        return {"msg": "profile updated sucessfully"}
     
     return {"error": "User not found"}

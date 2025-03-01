@@ -24,6 +24,11 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p><strong>Last Name:</strong> ${data.last}</p>
                 <p><strong>Email:</strong> ${data.email}</p>
                 <p><strong>Age:</strong> ${data.age}</p>
+                <p><strong>Family Plans:</strong> ${data.haveChildren}</p>
+                <p><strong>Have Children?:</strong> ${data.wantChildren}</p>
+                <p><strong>Match With:</strong> ${data.matchPreferences}</p>
+                <p><strong>Political Offiliation:</strong> ${data.politics}</p>
+                <p><strong>Religion:</strong> ${data.religion}</p>
             `;
         } else {
             profileContainer.innerHTML = "<p>Error: Profile data not found.</p>";
