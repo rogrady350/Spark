@@ -1,0 +1,38 @@
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: whitesmoke;
+    background-color: purple;
+    text-align: center;
+    margin: 0 auto 20px auto;
+    display: block;
+    width: 30%;
+    padding: 10px 0;
+}
+
+#profileContainer {
+    display: block;
+    width: fit-content;
+    margin: 10px auto;
+    text-align: left;
+    background-color: aliceblue;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/*button styling*/
+button {
+    background-color: purple;
+    color: whitesmoke;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px
+}

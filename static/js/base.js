@@ -4,13 +4,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const profileLink = document.getElementById("profile-link");
     const recommendationsLink = document.getElementById("recommendations-link");
+    const likesLink = document.getElementById("likes-link");
+    const matchesLink = document.getElementById("matches-link");
     const logoutBtn = document.getElementById("logout-btn");
 
     //if not logged in hide all links besides home
     if (!userId) {
         if (profileLink) profileLink.style.display = "none";
         if (recommendationsLink) recommendationsLink.style.display = "none";
-        if(logoutBtn) logoutBtn.style.display = "none";
+        if (likesLink) likesLink.style.display = "none";
+        if (matchesLink) matchesLink.style.display = "none";
+        if (logoutBtn) logoutBtn.style.display = "none";
     }
 
     //logout button listener

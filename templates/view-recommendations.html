@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+<!--extended head-->
+{% block title %}Compatible Matches{% endblock %}</title>  <!--title block-->
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view-recommendations.css') }}"> 
+{% endblock %}
+
+<!--extended body-->
+    <!--extended main-->
+    {% block content %}
+        <h2>Your Most Compatible</h2>
+
+        <div id="profileContainer"></div>
+
+        <!--buttons-->
+        <div class="button-container">
+            <button id="like">Like</button>
+            <button id="next" type="button">Next</button>
+        </div>
+    {% endblock %}
+    <!--end main-->
+    
+    {% block scripts %}
+        <script src="{{ url_for('static', filename='js/view-recommendations.js') }}" defer></script>
+    {% endblock %}
+<!--end body-->

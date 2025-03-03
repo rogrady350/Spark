@@ -7,21 +7,29 @@ def init_routes(app):
     def home():
         return render_template("home.html")
     
+    @app.route("/create-account")
+    def create_account():
+        return render_template("create-account.html")
+    
     @app.route("/view-profile")
     def view_profile():
         return render_template("view-profile.html")
-
-    @app.route("/view-recommendations")
-    def view_recommendations():
-        return render_template("view-recommendations.html")
     
     @app.route("/update-profile")
     def update_profile():
         return render_template("update-profile.html")
     
-    @app.route("/create-account")
-    def create_account():
-        return render_template("create-account.html")
+    @app.route("/view-recommendations")
+    def view_recommendations():
+        return render_template("view-recommendations.html")
+    
+    @app.route("/view-likes")
+    def view_likes():
+        return render_template("view-likes.html")
+    
+    @app.route("/view-matches")
+    def view_matches():
+        return render_template("view-matches.html")
     
     #API routes for crud operations (handle front end requests)
     #POST method for submitting data to db, server side create-account form
