@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify
-from service import add_profile, verify_password, get_profile, update_info
+from service import add_profile, verify_password, get_profile, get_next_profile, update_info
 
 def init_routes(app):
     #routes to pages
@@ -64,11 +64,28 @@ def init_routes(app):
         if "error" in data:
             status_code = (
                 404 if data["error"] == "User not found" else #id not found in db
-                404 #unauthorized, user id missing
+                401 #unauthorized, user id missing
             )
             return jsonify(data), status_code
 
         return jsonify(data), 200  #return user profile data as JSON string, 200 success code
+    
+    #GET method for displaying other prfoiles
+    @app.route("/api/view_recommendations", methods=["GET"])
+    def view_recommendations_api():
+        user_id = request.headers.get("User-Id")           #user's personal id
+        last_seen_id = request.headers.get("Last-Seen-Id") #id of last seen profile
+
+        data = get_next_profile(user_id, last_seen_id)  #function to retrieve next recomended profile
+
+        if "error" in data:
+            status_code = (
+                404 if data["error"] == "User not found" else #id not found in db or no more profiles to view
+                401 #unauthorized, user id missing
+            )
+            return jsonify(data), status_code
+
+        return jsonify(data), 200  #return next recommended profile
     
     #PUT method for updating personal profile (logged in user), server side update-profile form
     @app.route("/api/update-profile", methods=["PUT"])

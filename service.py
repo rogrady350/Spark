@@ -50,7 +50,7 @@ def verify_password(username, password):
     else:
         return {"success": False, "msg": "Incorrect username or password"} #return false for username not in db
 
-#retrieve personal profile data (logged in user) from db
+#retrieve profile data from db (general purpose: logged in user or another user)
 def get_profile(user_id):
     if not user_id:
         return {"error": "Unauthorized"} #handle error for no user_id provided
@@ -71,6 +71,37 @@ def get_profile(user_id):
         return user
 
     return {"error": "User not found"}
+
+#retreive another profile(calls get_profile)
+def get_next_profile(logged_in_user_id, last_seen_id=None):
+    #must be logged in to browse profiles
+    if not logged_in_user_id:
+        return {"error": "Unauthorized"}
+    
+    #convert ObjectId from mongo
+    try:
+        logged_in_user_object_id = ObjectId(logged_in_user_id) 
+    except Exception:
+        return {"error": "Invalid User ID"}
+    
+    query = {"_id": {"$ne": logged_in_user_object_id}} #exclude showing personal profile
+
+    if last_seen_id:
+        try:
+            last_seen_object_id = ObjectId(last_seen_id)
+            query["_id"] = {"$gt": last_seen_object_id} #for now just fetch next profile in order
+        except Exception:
+            return {"error": "Invalid last seen id"}
+        
+    #find next profile to display
+    next_profile = profile_collection.find_one(query, sort=[("_id", 1)])
+
+    #use get profile method for profile retrieval
+    if next_profile:
+        return get_profile(next_profile["_id"])
+    
+    #error if user has seen all available profiles
+    return {"error": "No more profiles to view"}
 
 #update personal profile data from update-profile form (logged in user) in db
 def update_info(user_id, updated_data):
