@@ -4,18 +4,20 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "/"; //redirect to home if not logged in
     }     
 
-    //GET - client side display profile data. only runs if user logged in
-    fetch("/api/view-profile", {
-        method: "GET",
-        headers: { 
-            "Content-Type": "application/json" ,
-            "User-Id": localStorage.getItem("user_id") //change to other profiles
-        }
-    })
+    
+});
+
+function getNextProfile(lastSeenId = null) {
+    //GET - client side display profile data
+    fetch("/api/view-recommendations", { method: "GET", headers })
     .then(response => response.json())
     .then(data => {
         const profileContainer = document.getElementById("profileContainer");
         profileContainer.innerHTML = ""; //clear previous data
+
+        if(data.error) {
+            profileContainer = <p>No more profiles available</p>
+        }
 
         if (data.username) {
             profileContainer.innerHTML = `
@@ -32,4 +34,4 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     })
     .catch(error => console.error("Error:", error));
-});
+}
