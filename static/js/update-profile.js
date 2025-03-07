@@ -74,7 +74,10 @@ document.addEventListener("DOMContentLoaded", function() {
         //PUT - client side update profile data
         fetch("/api/update-profile", {
             method: "PUT",
-            headers: { "Content-Type": "application/json", "User-Id": localStorage.getItem("user_id") },
+            headers: { 
+                "Content-Type": "application/json", 
+                "User-Id": localStorage.getItem("user_id") 
+            },
             body: JSON.stringify(profileData)
         })
         .then(response => response.json())

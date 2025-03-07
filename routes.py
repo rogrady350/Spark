@@ -71,7 +71,7 @@ def init_routes(app):
         return jsonify(data), 200  #return user profile data as JSON string, 200 success code
     
     #GET method for displaying other prfoiles
-    @app.route("/api/view_recommendations", methods=["GET"])
+    @app.route("/api/view-recommendations", methods=["GET"])
     def view_recommendations_api():
         user_id = request.headers.get("User-Id")           #user's personal id
         last_seen_id = request.headers.get("Last-Seen-Id") #id of last seen profile

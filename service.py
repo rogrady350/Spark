@@ -65,9 +65,9 @@ def get_profile(user_id):
     user = profile_collection.find_one({"_id": user_object_id})
 
     if user:
-        user.pop("_id", None)  #remove _id
+        user["_id"] = str(user["_id"])
         user.pop("password", None) #remove password
-        print("Retrieved user data:", user)
+        print("Retrieved user data:", user) #debug
         return user
 
     return {"error": "User not found"}
