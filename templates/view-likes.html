@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+<!--extended head-->
+{% block title %}Likes{% endblock %}</title>  <!--title block-->
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/view-likes.css') }}"> 
+{% endblock %}
+
+<!--extended body-->
+    <!--extended main-->
+    {% block content %}
+        <h2>Likes</h2>
+
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>username</th>
+                        <th></th> <!--Column for view button-->>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="obj in reservations">
+                        <td>{{ obj.name }}</td>
+                        <td>{{ obj.date }}</td>
+                        <td>
+                            <button data-ng-click="viw($index)">Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}
+    <!--end main-->
+    
+    {% block scripts %}
+        <script src="{{ url_for('static', filename='js/view-likes.js') }}" defer></script>
+    {% endblock %}
+<!--end body-->

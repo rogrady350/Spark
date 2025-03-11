@@ -5,20 +5,8 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "/"; //redirect to home if not logged in
     }
 
-    getNextProfile(); //call to display first profile on page load
-});
-
-function getNextProfile(lastSeenId = null) {
-    const headers = {
-        "Content-Type": "application/json",
-        "User-Id": localStorage.getItem("user_id")
-    }
-
-    //get value of last seen profile if sent in header
-    if (lastSeenId) headers["Last-Seen-Id"] = lastSeenId
-
     //GET - client side display profile data
-    fetch("/api/view-recommendations", { method: "GET", headers })
+    fetch("/api/view-profile", { method: "GET", headers })
     .then(response => response.json())
     .then(data => {
         const profileContainer = document.getElementById("profileContainer");
@@ -50,6 +38,10 @@ function getNextProfile(lastSeenId = null) {
         document.getElementById("like").addEventListener("click", function() {}); //like button (not set up yet)
     })
     .catch(error => console.error("Error:", error));
+});
+
+function skipProfile() {
+
 }
 
 function likeProfile () {
