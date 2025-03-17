@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", function() {
         window.location.href = "/"; //redirect to home if not logged in
     }
 
+    //button listeners
+    document.getElementById("next").addEventListener("click", handleNextClick);
+    document.getElementById("like").addEventListener("click", handleLikeClick);
+
     getNextProfile(); //call to display first profile on page load
 });
 
@@ -38,20 +42,51 @@ function getNextProfile(lastSeenId = null) {
                 <p><strong>Political Offiliation:</strong> ${data.politics}</p>
                 <p><strong>Religion:</strong> ${data.religion}</p>
             `;
+
+            //store current profile ID for buttons
+            document.getElementById("next").dataset.profileId = data._id;
+            document.getElementById("like").dataset.profileId = data._id;
         } else {
             profileContainer.innerHTML = "<p>Error: Profile data not found.</p>";
-        }
-
-        //listeners
-        document.getElementById("next").addEventListener("click", function() {
-            console.log("Next button clicked. Fetching profile after:", data._id);
-            getNextProfile(data._id)
-        }); //next button
-        document.getElementById("like").addEventListener("click", function() {}); //like button (not set up yet)
+        }        
     })
     .catch(error => console.error("Error:", error));
 }
 
-function likeProfile () {
-    
+//button functions
+//Next button
+function handleNextClick() {
+    const currentProfileId = document.getElementById("next").dataset.profileId;
+    console.log("Next button clicked. Fetching profile after:", currentProfileId);
+    getNextProfile(currentProfileId); //call function to move to next profile
+}
+
+function handleLikeClick() {
+    const userId = localStorage.getItem("user_id");
+    const likedUserId = document.getElementById("like").dataset.profileId;
+
+    if (!likedUserId) {
+        console.error("Error: No profile selected to like.");
+        return;
+    }
+
+    fetch("/api/like-profile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "User-Id": userId
+        },
+        body: JSON.stringify({ liked_user_id: likedUserId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error("Error: ", data.error);
+            return;
+        }
+
+        console.log("Profile liked successfully: ", likedUserId);
+        getNextProfile(likedUserId); //call function to move to next profile after liking
+    })
+    .catch(error => console.error("Error:", error));
 }

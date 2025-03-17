@@ -1,6 +1,8 @@
 //Listener to verify user is logged in - runs first before loading user data
 document.addEventListener("DOMContentLoaded", function() {
-    if (!localStorage.getItem("user_id")) {
+    const userId = localStorage.getItem("user_id");
+    
+    if (!userId) {
         window.location.href = "/"; //redirect to home if not logged in
     }     
 
@@ -9,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function() {
         method: "GET",
         headers: { 
             "Content-Type": "application/json" ,
-            "User-Id": localStorage.getItem("user_id")
+            "User-Id": userId
         }
     })
     .then(response => response.json())

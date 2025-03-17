@@ -138,8 +138,8 @@ def add_liked_profile(user_id, liked_user_id):
         return{"error": "Invalid User ID"}
 
     try: 
-        user_object_id = ObjectId(user_object_id) #convert logged in user's id
-        liked_object_id = ObjectId(user_id)       #converted liked user's id
+        user_object_id = ObjectId(user_id) #convert logged in user's id
+        liked_object_id = ObjectId(liked_user_id)       #converted liked user's id
     except Exception:
         return {"error": "Invalid User ID"}
     

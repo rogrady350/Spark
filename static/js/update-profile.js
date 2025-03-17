@@ -30,6 +30,12 @@ document.querySelectorAll(".matchOption").forEach(function(checkbox) {
 
 //submit form
 document.addEventListener("DOMContentLoaded", function() {
+    //can only update if logged in
+    if (!localStorage.getItem("user_id")) {
+        window.location.href = "/"; 
+        return;
+    }
+    
     //get selected checkbox values, by className
     function getCheckedValues(className) {
         var selectedValues = [] //array to hold values

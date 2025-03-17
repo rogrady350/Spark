@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify
-from service import add_profile, verify_password, get_profile, get_next_profile, update_info
+from service import add_profile, get_liked_profile, verify_password, get_profile, get_next_profile, update_info, add_liked_profile
 
 def init_routes(app):
     #routes to pages
@@ -30,6 +30,10 @@ def init_routes(app):
     @app.route("/view-matches")
     def view_matches():
         return render_template("view-matches.html")
+    
+    @app.route("/view-matches")
+    def view_likded_profile():
+        return render_template("view-liked-profile.html")
     
     #API routes for crud operations (handle front end requests)
     #POST method for submitting data to db, server side create-account form
@@ -117,7 +121,7 @@ def init_routes(app):
         if "error" in result:
             status_code = (
                 404 if data["error"] == "User not found" else #id not found in db
-                400 if data["error"] == "No data to update" else #no data provided
+                400 if data["error"] == "Invalid User Id" else #invalid input
                 401 #unauthorized, user id missing
             )
             return jsonify(result), status_code
@@ -125,4 +129,16 @@ def init_routes(app):
         return jsonify(result), 200
 
     #GET method for viewing list of profiles who liked you
-    
+    @app.route("/api/view-likes", methods=["GET"])
+    def view_likes_api():
+        user_id = request.headers.get("User-Id")
+        result = get_liked_profile(user_id)
+
+        if "error" in result:
+            status_code = (
+                404 if result["error"] == "User not found" else
+                401  # Unauthorized
+            )
+            return jsonify(result), status_code  # Ensures JSON response
+
+        return jsonify(result), 200
