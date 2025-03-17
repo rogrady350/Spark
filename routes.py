@@ -104,3 +104,25 @@ def init_routes(app):
             return jsonify(data), status_code
         
         return result, 200
+    
+    #POST method for liking a profile
+    @app.route("/api/like-profile", methods=["POST"])
+    def liked_profile_api():
+        user_id = request.headers.get("User-Id")
+        data = request.json  #get JSON data from request body
+        liked_user_id = data.get("liked_user_id")
+
+        result = add_liked_profile(user_id, liked_user_id)
+
+        if "error" in result:
+            status_code = (
+                404 if data["error"] == "User not found" else #id not found in db
+                400 if data["error"] == "No data to update" else #no data provided
+                401 #unauthorized, user id missing
+            )
+            return jsonify(result), status_code
+        
+        return jsonify(result), 200
+
+    #GET method for viewing list of profiles who liked you
+    

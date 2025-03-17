@@ -21,14 +21,7 @@
                         <th></th> <!--Column for view button-->>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr ng-repeat="obj in reservations">
-                        <td>{{ obj.name }}</td>
-                        <td>{{ obj.date }}</td>
-                        <td>
-                            <button data-ng-click="viw($index)">Edit</button>
-                        </td>
-                    </tr>
+                <tbody id="likes-container">
                 </tbody>
             </table>
         </div>

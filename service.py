@@ -131,3 +131,52 @@ def update_info(user_id, updated_data):
         return {"msg": "profile updated sucessfully"}
     
     return {"error": "User not found"}
+
+#add users who have you like to their db collection
+def add_liked_profile(user_id, liked_user_id):
+    if not user_id or not liked_user_id:
+        return{"error": "Invalid User ID"}
+
+    try: 
+        user_object_id = ObjectId(user_object_id) #convert logged in user's id
+        liked_object_id = ObjectId(user_id)       #converted liked user's id
+    except Exception:
+        return {"error": "Invalid User ID"}
+    
+    #update liked user's db collection, add logged-in user to liked_users array
+    result = profile_collection.update_one(
+        {"_id": liked_object_id},
+        {"$addToSet": {"liked_users": user_object_id}} #addToSet to prevent same user from displaying more than once
+    )
+
+    if result.modified_count:
+        return {"msg": "Profile liked successfully"}
+    
+    return {"error": "User not found or already liked"}
+
+#retrieve list of users from like_users column in db
+def get_liked_profile(user_id):
+    if not user_id:
+        return {"error": "Unauthorized"} #handle error for no user_id provided
+    
+    #convert user_id, stored as Object id in Mongo
+    try:
+        user_object_id = ObjectId(user_id)
+    except Exception:
+        return {"error": "Invalid User ID"}
+    
+    #retrieve liked_users column from logged-in users collection
+    user = profile_collection.find_one({"_id": user_object_id}, {"liked_users": 1})
+
+    #display empty list if user has no likes yet
+    #handle if both if the column doesnt exist in the collecion or list is empty
+    if "liked_users" not in user or not user["liked_users"]:
+        return []
+    
+    #fetch only necessary files for security (name, username)
+    liked_profiles = profile_collection.find(
+        {"_id": {"$in": user["liked_users"]}}, 
+        {"first": 1, "username": 1, "_id": 0} #exclude id automatically sent by mongo for security
+    )
+    
+    return list(liked_profiles)
