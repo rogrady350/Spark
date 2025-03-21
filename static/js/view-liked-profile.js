@@ -31,11 +31,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         //listeners
+        //next button
         document.getElementById("next").addEventListener("click", function() {
             console.log("Next button clicked. Fetching profile after:", data._id);
             getNextProfile(data._id)
-        }); //next button
-        document.getElementById("like").addEventListener("click", function() {}); //like button (not set up yet)
+        });
+
+        //like button
+        document.getElementById("like").addEventListener("click", function() {});
     })
     .catch(error => console.error("Error:", error));
 });

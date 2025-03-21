@@ -32,6 +32,7 @@ function getNextProfile(lastSeenId = null) {
             return;
         }
 
+        //display profile information
         if (data.username) {
             profileContainer.innerHTML = `
                 <p><strong>First Name:</strong> ${data.first}</p>
@@ -61,6 +62,7 @@ function handleNextClick() {
     getNextProfile(currentProfileId); //call function to move to next profile
 }
 
+//Like button
 function handleLikeClick() {
     const userId = localStorage.getItem("user_id");
     const likedUserId = document.getElementById("like").dataset.profileId;

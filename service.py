@@ -67,6 +67,7 @@ def get_profile(user_id):
     if user:
         user["_id"] = str(user["_id"])
         user.pop("password", None) #remove password
+        user.pop("liked_users", None)
         print("Retrieved user data:", user) #debug
         return user
 
@@ -176,7 +177,55 @@ def get_liked_profile(user_id):
     #fetch only necessary files for security (name, username)
     liked_profiles = profile_collection.find(
         {"_id": {"$in": user["liked_users"]}}, 
-        {"first": 1, "username": 1, "_id": 0} #exclude id automatically sent by mongo for security
+        {"first": 1, "username": 1} #id automatically sent by mongo for security
+    )
+
+    #convert ObjectId in liked_profile array to string
+    result = []
+    for profile in liked_profiles:
+        profile["_id"] = str(profile["_id"])
+        result.append(profile)
+    
+    return result
+
+#functions for buttons on view-liked-profile page
+#skip button - removes id of profile being viewed from logged in user's liked_profiles array
+def remove_like(user_id, skipped_user_id):
+    try:
+        user_object_id = ObjectId(user_id)
+        skipped_object_id = ObjectId(skipped_user_id)
+    except:
+        return {"error": "Invalid User ID"}
+    
+    #updated liked_users array of logged in user
+    profile_collection.update_one(
+        {"_id": user_object_id},
+        {"$pull": {"liked_users": skipped_object_id}}
     )
     
-    return list(liked_profiles)
+    return{"msg": "Removed from ikes"}
+
+#match button - adds the other's profile to both user's matched_profiles array
+def add_match(user_id, liked_user_id):
+    try:
+        user_object_id = ObjectId(user_id)
+        liked_object_id = ObjectId(liked_user_id)
+    except:
+        return {"error": "Invalid User ID"}
+    
+    #add each other to matched_profiles array
+    #add liked user to logged in user's match array
+    profile_collection.update_one(
+        {"_id": user_object_id},
+        {"$addToSet": {"matched_profiles": liked_object_id}}
+    )
+    #add logged in user to liked user's match array
+    profile_collection.update_one(
+        {"_id": liked_object_id},
+        {"$addToSet": {"matched_profiles": user_object_id}}
+    )
+    #update liked_users array - remove from likes since added to match
+    profile_collection.update_one(
+        {"_id": user_object_id},
+        {"$pull": {"liked_users": liked_object_id}}
+    )

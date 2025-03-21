@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify
-from service import add_profile, get_liked_profile, verify_password, get_profile, get_next_profile, update_info, add_liked_profile
+from service import add_match, add_profile, get_liked_profile, remove_like, verify_password, get_profile, get_next_profile, update_info, add_liked_profile
 
 def init_routes(app):
     #routes to pages
@@ -31,7 +31,7 @@ def init_routes(app):
     def view_matches():
         return render_template("view-matches.html")
     
-    @app.route("/view-matches")
+    @app.route("/view-liked-profile")
     def view_likded_profile():
         return render_template("view-liked-profile.html")
     
@@ -141,4 +141,23 @@ def init_routes(app):
             )
             return jsonify(result), status_code  # Ensures JSON response
 
+        return jsonify(result), 200
+    
+    #api calls for updated liked and matched profile arrays
+    #POST - skip button updates like_users array of logged in user
+    @app.route("/api/skip-profile", methods=["POST"])
+    def skip_profile_api():
+        user_id = request.headers.get("User-Id")
+        data = request.get_json
+        skipped_user_id = data.get("skipped_user_id")
+
+        result = remove_like(user_id, skipped_user_id)
+        return jsonify(result), 200
+    #POST - match button updates both user's matched_profile array with other user
+    def match_profile_api():
+        user_id = request.headers.get("User-Id")
+        data = request.get_json()
+        liked_user_id = data.get("liked_user_id")
+
+        result = add_match(user_id, liked_user_id)
         return jsonify(result), 200
