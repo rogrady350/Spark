@@ -203,7 +203,7 @@ def remove_like(user_id, skipped_user_id):
         {"$pull": {"liked_users": skipped_object_id}}
     )
     
-    return{"msg": "Removed from ikes"}
+    return{"msg": "Removed from likes"}
 
 #match button - adds the other's profile to both user's matched_profiles array
 def add_match(user_id, liked_user_id):
@@ -229,3 +229,5 @@ def add_match(user_id, liked_user_id):
         {"_id": user_object_id},
         {"$pull": {"liked_users": liked_object_id}}
     )
+
+    return {"msg": "Profiles Matched!"}

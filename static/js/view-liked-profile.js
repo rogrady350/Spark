@@ -3,10 +3,43 @@ document.addEventListener("DOMContentLoaded", function() {
     //only can view other profiles if logged in
     if (!localStorage.getItem("user_id")) {
         window.location.href = "/"; //redirect to home if not logged in
+        return;
     }
 
-    //GET - client side display profile data
-    fetch("/api/view-profile", { method: "GET", headers })
+    //profile of desired like to view
+    const viewUserId = new URLSearchParams(window.location.search).get("user_id");
+
+    //handle manual navigation to page or broken id errors
+    if (!viewUserId) {
+        alert("Unavailable. No user selected");
+        return;
+    }
+
+    //display selected profile on page load
+    loadProfile(viewUserId);
+
+    //button listeners
+    //skip button
+    document.getElementById("skip").addEventListener("click", function() {
+        skipProfile(viewUserId) ;
+    });
+
+    //like button
+    document.getElementById("like").addEventListener("click", function() {
+        likeProfile(viewUserId);
+    });
+});
+
+//view  userprofile of selected like
+function loadProfile(userId) {
+    //GET - client side view profile data
+    fetch("/api/view-profile", { 
+        method: "GET", 
+        headers: {
+            "Content-Type": "application/json",
+            "User-Id": userId,
+        },
+    })
     .then(response => response.json())
     .then(data => {
         const profileContainer = document.getElementById("profileContainer");
@@ -29,26 +62,44 @@ document.addEventListener("DOMContentLoaded", function() {
         } else {
             profileContainer.innerHTML = "<p>Error: Profile data not found.</p>";
         }
-
-        //listeners
-        //next button
-        document.getElementById("next").addEventListener("click", function() {
-            console.log("Next button clicked. Fetching profile after:", data._id);
-            getNextProfile(data._id)
-        });
-
-        //like button
-        document.getElementById("like").addEventListener("click", function() {});
     })
-    .catch(error => console.error("Error:", error));
-});
-
-
-function skipProfile() {
-
+    .catch(error => {
+        console.error("Error:", error);
+        document.getElementById("profileContainer").innerHTML = "<p>Unable to load profile. Please try again later.</p>";
+    });
 }
 
+//button functions
+//skip button
+function skipProfile(skippedUserId) {
+    fetch("/api/skip-profile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "User-Id": localStorage.getItem("user_id")
+        },
+        body: JSON.stringify({ skipped_user_id: skippedUserId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.msg || "Profile Skipped")
+        window.location.href = "/view-likes"; //redirect back to likes page if skipped
+    });
+}
 
-function likeProfile () {
-    
+//like button
+function likeProfile (likedUserId) {
+    fetch("/api/match-profile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "User-Id": localStorage.getItem("user_id"),
+        },
+        body: JSON.stringify({ liked_user_id: likedUserId }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        alert(data.msg || "You Matched!");
+        window.location.href = "/view-likes"; //redirect back to likes page
+    });
 }

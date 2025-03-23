@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     //button listeners
-    document.getElementById("next").addEventListener("click", handleNextClick);
+    document.getElementById("skip").addEventListener("click", handleSkipClick);
     document.getElementById("like").addEventListener("click", handleLikeClick);
 
     getNextProfile(); //call to display first profile on page load
@@ -45,7 +45,7 @@ function getNextProfile(lastSeenId = null) {
             `;
 
             //store current profile ID for buttons
-            document.getElementById("next").dataset.profileId = data._id;
+            document.getElementById("skip").dataset.profileId = data._id;
             document.getElementById("like").dataset.profileId = data._id;
         } else {
             profileContainer.innerHTML = "<p>Error: Profile data not found.</p>";
@@ -56,9 +56,9 @@ function getNextProfile(lastSeenId = null) {
 
 //button functions
 //Next button
-function handleNextClick() {
-    const currentProfileId = document.getElementById("next").dataset.profileId;
-    console.log("Next button clicked. Fetching profile after:", currentProfileId);
+function handleSkipClick() {
+    const currentProfileId = document.getElementById("skip").dataset.profileId;
+    console.log("Skip button clicked. Fetching profile after:", currentProfileId);
     getNextProfile(currentProfileId); //call function to move to next profile
 }
 

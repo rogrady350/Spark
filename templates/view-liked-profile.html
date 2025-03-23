@@ -16,13 +16,13 @@
 
         <!--buttons-->
         <div class="button-container">
-            <button id="next" type="button">Skip</button>
+            <button id="skip" type="button">Skip</button>
             <button id="like" type="button">Like</button>
         </div>
     {% endblock %}
     <!--end main-->
     
     {% block scripts %}
-        <script src="{{ url_for('static', filename='js/view-recommendations.js') }}" defer></script>
+        <script src="{{ url_for('static', filename='js/view-liked-profile.js') }}" defer></script>
     {% endblock %}
 <!--end body-->

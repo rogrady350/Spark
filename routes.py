@@ -120,8 +120,8 @@ def init_routes(app):
 
         if "error" in result:
             status_code = (
-                404 if data["error"] == "User not found" else #id not found in db
-                400 if data["error"] == "Invalid User Id" else #invalid input
+                404 if result["error"] == "User not found" else #id not found in db
+                400 if result["error"] == "Invalid User Id" else #invalid input
                 401 #unauthorized, user id missing
             )
             return jsonify(result), status_code
@@ -148,12 +148,13 @@ def init_routes(app):
     @app.route("/api/skip-profile", methods=["POST"])
     def skip_profile_api():
         user_id = request.headers.get("User-Id")
-        data = request.get_json
+        data = request.get_json()
         skipped_user_id = data.get("skipped_user_id")
 
         result = remove_like(user_id, skipped_user_id)
         return jsonify(result), 200
     #POST - match button updates both user's matched_profile array with other user
+    @app.route("/api/match-profile", methods=["POST"])
     def match_profile_api():
         user_id = request.headers.get("User-Id")
         data = request.get_json()
