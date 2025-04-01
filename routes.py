@@ -1,5 +1,6 @@
 from flask import render_template, request, jsonify
-from service import add_match, add_profile, get_liked_profile, remove_like, verify_password, get_profile, get_next_profile, update_info, add_liked_profile
+from service import add_match, add_profile, get_liked_profile, remove_like, verify_password, get_profile, update_info, add_liked_profile
+from recommendations import get_next_profile
 
 def init_routes(app):
     #routes to pages

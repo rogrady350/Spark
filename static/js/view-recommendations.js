@@ -27,7 +27,7 @@ function getNextProfile(lastSeenId = null) {
     .then(data => {
         const profileContainer = document.getElementById("profileContainer");
 
-        if(data.error) {
+        if(data.msg) {
             profileContainer.innerHTML = '<p>No more profiles available</p>';
             return;
         }
