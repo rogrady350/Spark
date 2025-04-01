@@ -27,6 +27,9 @@ def calculate_compatibility(user, recommended_user):
 
 #use score to return list of recommendations
 def get_ranked_recommendations(user_id):
+    #debug
+    print(f"Running recommendation logic for user ID: {user_id}")
+
     user = get_profile(user_id)
 
     #do not show skipped, matched, and viewed profiles
@@ -44,9 +47,11 @@ def get_ranked_recommendations(user_id):
     for c in candidate_users:
         #filter viewed
         if str(c["_id"]) in viewed:
+            print(f"Skipping {c['username']} (already viewed)")
             continue
         #filter desired gender matches of user
         if user.get("matchPreferences") and c.get("gender") not in user["matchPreferences"]:
+            print(f"Skipping {c['username']} (gender mismatch)")
             continue
         #filter desired gender matches of candidate users to user
         if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
@@ -59,6 +64,9 @@ def get_ranked_recommendations(user_id):
         if score > 0:
             c["_id"] = str(c["_id"]) #convert ObjectId to string (for JSON serializaztion in frontend)
             scored_candidates.append((c,score))  #append 1 (profile, score) tuple per match
+
+        #debug show candidates
+        print("Final scored candidates:", scored_candidates)
 
     #sort candidates by score. anonymous lambda function gets score (second element) from list, highest ranked first
     scored_candidates.sort(key=lambda x: x[1], reverse=True)

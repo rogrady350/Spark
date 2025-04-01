@@ -18,6 +18,9 @@ function getNextProfile(lastSeenId = null) {
         "User-Id": localStorage.getItem("user_id")
     }
 
+    //debug
+    console.log("Sending User-Id:", localStorage.getItem("user_id"));
+
     //get value of last seen profile if sent in header
     if (lastSeenId) headers["Last-Seen-Id"] = lastSeenId
 

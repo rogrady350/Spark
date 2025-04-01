@@ -15,6 +15,16 @@ have_children = ["yes", "no", "not"]
 
 #Function to generate profiles with random data. Use Faker for generation and random for random selection from options
 def generate_profile_data():
+    #force opposoite gender for male/female for better pairing options for testing
+    gender = random.choice(genders)
+    if gender == "male":
+        match_preferences = ["female"]
+    elif gender == "female":
+        match_preferences = ["male"]
+    else:
+        #allow choice of more than one match preference
+        match_preferences = random.sample(genders, k=random.randint(1, 3))
+
     return{
         "username": fake.user_name(),
         "password": hash_password("Robert88"), #use same password for all users for ease of testing
@@ -24,7 +34,7 @@ def generate_profile_data():
         "age": random.randint(18, 65), #random age between 18 and 65
         "occupation": fake.job(),
         "gender": random.choice(genders),
-        "matchPreferences": random.sample(genders, k=random.randint(1, 3)), #randomly select how many genders user wants to match with
+        "matchPreferences": match_preferences,
         "politics": random.choice(politics),
         "religion": random.choice(religions),
         "wantChildren": random.choice(children),
