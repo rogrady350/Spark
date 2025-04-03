@@ -39,19 +39,22 @@ def get_ranked_recommendations(user_id):
     #convert ObjectId from skipped and matched list to string and store in set of unique uid's
     viewed = set(str(uid) for uid in skipped + matched)
 
-    candidate_users = profile_collection.find({"_id": {"$ne": ObjectId(user_id)}})
+    candidates_list = list(profile_collection.find({"_id": {"$ne": ObjectId(user_id)}}))
+    #debug if pulling all users from db
+    print("Total candidates returned from DB:", len(candidates_list))
+
 
     #create list of tuples of scored candiate users with their compatability score
     scored_candidates = []
 
-    for c in candidate_users:
+    for c in candidates_list:
         #filter viewed
         if str(c["_id"]) in viewed:
             print(f"Skipping {c['username']} (already viewed)")
             continue
         #filter desired gender matches of user
         if user.get("matchPreferences") and c.get("gender") not in user["matchPreferences"]:
-            print(f"Skipping {c['username']} (gender mismatch)")
+            print(f"Skipping {c['username']} | Candidate: {c['username']} gender: {c.get('gender')} (gender mismatch)")
             continue
         #filter desired gender matches of candidate users to user
         if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
