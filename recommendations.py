@@ -7,7 +7,7 @@ def calculate_compatibility(user, recommended_user):
     score = 0 #set score to 0 initially
 
     #increase score for closer age
-    age_difference = abs(user["age"] - recommended_user["age"]) #absolute value to always get positive difference
+    age_difference = abs(user["age"] - recommended_user["age"]) #absolute value to always get positive difference    
     if age_difference < 3:
         score += 3
     elif age_difference < 7:
@@ -49,16 +49,17 @@ def get_ranked_recommendations(user_id):
 
     for c in candidates_list:
         #filter viewed
-        if str(c["_id"]) in viewed:
-            print(f"Skipping {c['username']} (already viewed)")
-            continue
+        #if str(c["_id"]) in viewed:
+        #    print(f"Skipping {c['username']} (already viewed)")
+        #    continue
         #filter desired gender matches of user
-        if user.get("matchPreferences") and c.get("gender") not in user["matchPreferences"]:
-            print(f"Skipping {c['username']} | Candidate: {c['username']} gender: {c.get('gender')} (gender mismatch)")
-            continue
+        #if user.get("matchPreferences") and c.get("gender") not in user["matchPreferences"]:
+        #    print(f"Skipping {c['username']} | Candidate: {c['username']} gender: {c.get('gender')} (gender mismatch)")
+        #    continue
         #filter desired gender matches of candidate users to user
-        if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
-            continue
+        #if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
+        #    print(f"Skipping {c['username']} (candidate doesn't match with user gender)")
+        #    continue
 
         #calculated compatibility of filtered list of users
         score = calculate_compatibility(user, c)
@@ -68,8 +69,8 @@ def get_ranked_recommendations(user_id):
             c["_id"] = str(c["_id"]) #convert ObjectId to string (for JSON serializaztion in frontend)
             scored_candidates.append((c,score))  #append 1 (profile, score) tuple per match
 
-        #debug show candidates
-        print("Final scored candidates:", scored_candidates)
+    #debug users added to recommendation list
+    print("Final scored candidates:", [c[0]['username'] for c in scored_candidates])
 
     #sort candidates by score. anonymous lambda function gets score (second element) from list, highest ranked first
     scored_candidates.sort(key=lambda x: x[1], reverse=True)
