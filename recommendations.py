@@ -7,7 +7,11 @@ def calculate_compatibility(user, recommended_user):
     score = 0 #set score to 0 initially
 
     #increase score for closer age
-    age_difference = abs(user["age"] - recommended_user["age"]) #absolute value to always get positive difference    
+    #absolute value to always get positive difference. cast to int to prevent crash from bad front end data. (need to update front end to store as int.)
+    age_difference = abs(int(user["age"]) - int(recommended_user["age"])) 
+    #age debug
+    print(f"Scoring: {user.get('username')} vs {recommended_user.get('username')}")
+    print(f"User age: {user.get('age')}, Candidate age: {recommended_user.get('age')}")
     if age_difference < 3:
         score += 3
     elif age_difference < 7:
@@ -31,13 +35,19 @@ def get_ranked_recommendations(user_id):
     print(f"Running recommendation logic for user ID: {user_id}")
 
     user = get_profile(user_id)
+    if "error" in user:
+        print("ERROR: User profile not found.")
+        return []
+
+    print(f"Retrieved user data: {user}")
+    print(f"User match prefs: {user.get('matchPreferences')}, gender: {user.get('gender')}")
 
     #do not show skipped, matched, and viewed profiles
     skipped = user.get("liked_users", [])
     matched = user.get("matched_profiles", [])
     
     #convert ObjectId from skipped and matched list to string and store in set of unique uid's
-    viewed = set(str(uid) for uid in skipped + matched)
+    #viewed = set(str(uid) for uid in skipped + matched)
 
     candidates_list = list(profile_collection.find({"_id": {"$ne": ObjectId(user_id)}}))
     #debug if pulling all users from db
@@ -62,10 +72,13 @@ def get_ranked_recommendations(user_id):
         #    continue
 
         #calculated compatibility of filtered list of users
+        print(f"Scoring {c['username']}")
         score = calculate_compatibility(user, c)
+        print(f"Score for {c['username']}: {score}")
 
         #only append users with some compatability (score > 0)
         if score > 0:
+            print(f"Score for {c['username']}: {score}")
             c["_id"] = str(c["_id"]) #convert ObjectId to string (for JSON serializaztion in frontend)
             scored_candidates.append((c,score))  #append 1 (profile, score) tuple per match
 
