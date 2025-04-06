@@ -68,7 +68,7 @@ def get_profile(user_id):
         user["_id"] = str(user["_id"])
         user.pop("password", None) #remove password
         user.pop("liked_users", None)
-        print("Retrieved user data:", user) #debug
+        print("gp - Retrieved user data:", user) #debug
         return user
 
     return {"error": "User not found"}

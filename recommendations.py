@@ -32,27 +32,30 @@ def calculate_compatibility(user, recommended_user):
 #use score to return list of recommendations
 def get_ranked_recommendations(user_id):
     #debug
-    print(f"Running recommendation logic for user ID: {user_id}")
+    print(f"grr Running recommendation logic for user ID: {user_id}")
 
     user = get_profile(user_id)
     if "error" in user:
         print("ERROR: User profile not found.")
         return []
 
-    print(f"Retrieved user data: {user}")
-    print(f"User match prefs: {user.get('matchPreferences')}, gender: {user.get('gender')}")
+    print(f"grr Retrieved user data: {user}")
+    print(f"grr User match prefs: {user.get('matchPreferences')}, gender: {user.get('gender')}")
 
     #do not show skipped, matched, and viewed profiles
-    skipped = user.get("liked_users", [])
-    matched = user.get("matched_profiles", [])
+    #skipped = user.get("liked_users", [])
+    #matched = user.get("matched_profiles", [])
     
     #convert ObjectId from skipped and matched list to string and store in set of unique uid's
     #viewed = set(str(uid) for uid in skipped + matched)
 
     candidates_list = list(profile_collection.find({"_id": {"$ne": ObjectId(user_id)}}))
     #debug if pulling all users from db
-    print("Total candidates returned from DB:", len(candidates_list))
+    print("grr Total candidates returned from DB:", len(candidates_list))
 
+    # Remove password from all candidates early
+    for candidate in candidates_list:
+        candidate.pop("password", None)
 
     #create list of tuples of scored candiate users with their compatability score
     scored_candidates = []
@@ -72,26 +75,26 @@ def get_ranked_recommendations(user_id):
         #    continue
 
         #calculated compatibility of filtered list of users
-        print(f"Scoring {c['username']}")
+        print(f"grr Scoring {c['username']}")
         score = calculate_compatibility(user, c)
-        print(f"Score for {c['username']}: {score}")
+        print(f"grr Score for {c['username']}: {score}")
 
         #only append users with some compatability (score > 0)
         if score > 0:
-            print(f"Score for {c['username']}: {score}")
+            print(f"grr Score for {c['username']}: {score}")
             c["_id"] = str(c["_id"]) #convert ObjectId to string (for JSON serializaztion in frontend)
             scored_candidates.append((c,score))  #append 1 (profile, score) tuple per match
 
     #debug users added to recommendation list
-    print("Final scored candidates:", [c[0]['username'] for c in scored_candidates])
+    print("grr Final scored candidates:", [c[0]['username'] for c in scored_candidates])
 
     #sort candidates by score. anonymous lambda function gets score (second element) from list, highest ranked first
     scored_candidates.sort(key=lambda x: x[1], reverse=True)
 
     #print to verify candidate and rank are displaying accurate results
-    print("Ranked Recommendations:\n")
+    print("grr Ranked Recommendations:\n")
     for rank, (candidate, score) in enumerate(scored_candidates, start=1): #get tuple from list
-        print(f"Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
+        print(f"grr Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
 
     #extract candidate profile (c) from linked list and return list of recommended users
     return [c for c, s in scored_candidates]
