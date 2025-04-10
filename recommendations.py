@@ -2,6 +2,27 @@
 from service import get_profile, profile_collection
 from bson import ObjectId
 
+#Normalize fields - adds default null values so empty fields don't cause crash
+DEFAULT_PROFILE_FIELDS = {
+    "politics": None,
+    "religion": None,
+    "wantChildren": None,
+    "haveChildren": None,
+    "matchPreferences": [],
+    "gender": None,
+    "age": None,
+    "skipped_users": [],
+    "matched_users": [],
+    "liked_users": [],
+}
+
+#Helper function to normalize profiles
+def normalize_profile(profile):
+    for field, default in DEFAULT_PROFILE_FIELDS.items():
+        #if field exists return the value (field), otherwise retrun null (defualt value)
+        profile[field] = profile.get(field, default)
+    return profile
+
 #calculate level of compatability
 def calculate_compatibility(user, recommended_user):
     score = 0 #set score to 0 initially
@@ -35,6 +56,8 @@ def get_ranked_recommendations(user_id):
     if "error" in user:
         print("ERROR: User profile not found.")
         return []
+    
+    user = normalize_profile(user) #normalize after profile data retrieved
 
     #do not show skipped, matched, and viewed profiles. #if any are none, fall back to empty list
     #convert ObjectId from lists to string and store in set of unique uid's
@@ -76,6 +99,7 @@ def get_ranked_recommendations(user_id):
     scored_candidates = []
 
     for c in candidates_list:
+        c = normalize_profile(c) #normalize candidate before filtering
         #filter viewed
         print("grr checking:", c["username"], str(c["_id"]))
         if str(c["_id"]) in viewed:
