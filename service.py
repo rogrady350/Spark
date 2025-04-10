@@ -67,7 +67,9 @@ def get_profile(user_id):
     if user:
         user["_id"] = str(user["_id"])
         user.pop("password", None) #remove password
+        user.pop("skipped_users", None)
         user.pop("liked_users", None)
+        user.pop("matched_users", None)
         print("gp - Retrieved user data:", user) #debug
         return user
 
@@ -102,16 +104,38 @@ def update_info(user_id, updated_data):
     
     return {"error": "User not found"}
 
-#add users who have you like to their db collection
-def add_liked_profile(user_id, liked_user_id):
+#add skipped user-id to your (logged in user-id) db collection (Hinge/Tinder style filtering)
+def add_skipped_profile(user_id, skipped_user_id):
+    try:
+        user_object_id = ObjectId(user_id)
+        skipped_object_id = ObjectId(skipped_user_id)
+    except:
+        return {"error": "Invalid User ID"}
+
+    profile_collection.update_one(
+        {"_id": user_object_id},
+        {"$addToSet": {"skipped_users": skipped_object_id}}
+    )
+
+    print(f"Adding to skipped_profiles: {skipped_user_id} -> {user_id}")
+    print(profile_collection.find_one({"_id": user_object_id}, {"skipped_users": 1}))
+
+    return {"msg": "Profile skipped successfully"}
+
+#add your (logged-in) user id to profile collection of liked user-id
+def add_liked_profile(user_id, liked_user_id): 
     if not user_id or not liked_user_id:
         return{"error": "Invalid User ID"}
 
     try: 
-        user_object_id = ObjectId(user_id) #convert logged in user's id
-        liked_object_id = ObjectId(liked_user_id)       #converted liked user's id
+        user_object_id = ObjectId(user_id)        #convert logged in user's id
+        liked_object_id = ObjectId(liked_user_id) #converted liked user's id
     except Exception:
         return {"error": "Invalid User ID"}
+    
+    #debug for skipping profiles
+    print(f"Adding to skipped_profiles: {liked_user_id} -> {user_id}")
+    print(profile_collection.find_one({"_id": user_object_id}, {"liked_profiles": 1}))
     
     #update liked user's db collection, add logged-in user to liked_users array
     result = profile_collection.update_one(
@@ -124,7 +148,7 @@ def add_liked_profile(user_id, liked_user_id):
     
     return {"error": "User not found or already liked"}
 
-#retrieve list of users from like_users column in db
+#retrieve list of users from like_users column in your db collection
 def get_liked_profile(user_id):
     if not user_id:
         return {"error": "Unauthorized"} #handle error for no user_id provided
@@ -186,12 +210,12 @@ def add_match(user_id, liked_user_id):
     #add liked user to logged in user's match array
     profile_collection.update_one(
         {"_id": user_object_id},
-        {"$addToSet": {"matched_profiles": liked_object_id}}
+        {"$addToSet": {"matched_users": liked_object_id}}
     )
     #add logged in user to liked user's match array
     profile_collection.update_one(
         {"_id": liked_object_id},
-        {"$addToSet": {"matched_profiles": user_object_id}}
+        {"$addToSet": {"matched_users": user_object_id}}
     )
     #update liked_users array - remove from likes since added to match
     profile_collection.update_one(

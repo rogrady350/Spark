@@ -60,17 +60,43 @@ function getNextProfile(lastSeenId = null) {
 //button functions
 //Next button
 function handleSkipClick() {
-    const currentProfileId = document.getElementById("skip").dataset.profileId;
-    console.log("Skip button clicked. Fetching profile after:", currentProfileId);
-    getNextProfile(currentProfileId); //call function to move to next profile
+    //may be better to move userId and currentUserId to global variables
+    const userId = localStorage.getItem("user_id");
+    const currentUserId = document.getElementById("skip").dataset.profileId;
+    console.log("Skip button clicked. Fetching profile after:", currentUserId);
+
+    if (!currentUserId) {
+        console.error("Error: No profile selected to like.");
+        return;
+    }
+
+    fetch("/api/skip-profile", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "User-Id": userId
+        },
+        body: JSON.stringify({ skipped_user_id: currentUserId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error("Error: ", data.error);
+            return;
+        }
+
+        console.log("Profile skipped successfully: ", currentUserId);
+        getNextProfile(currentUserId); //call function to move to next profile after liking
+    })
+    .catch(error => console.error("Error:", error));
 }
 
 //Like button
 function handleLikeClick() {
     const userId = localStorage.getItem("user_id");
-    const likedUserId = document.getElementById("like").dataset.profileId;
+    const currentUserId = document.getElementById("like").dataset.profileId;
 
-    if (!likedUserId) {
+    if (!currentUserId) {
         console.error("Error: No profile selected to like.");
         return;
     }
@@ -81,7 +107,7 @@ function handleLikeClick() {
             "Content-Type": "application/json",
             "User-Id": userId
         },
-        body: JSON.stringify({ liked_user_id: likedUserId })
+        body: JSON.stringify({ liked_user_id: currentUserId })
     })
     .then(response => response.json())
     .then(data => {
@@ -90,8 +116,8 @@ function handleLikeClick() {
             return;
         }
 
-        console.log("Profile liked successfully: ", likedUserId);
-        getNextProfile(likedUserId); //call function to move to next profile after liking
+        console.log("Profile liked successfully: ", currentUserId);
+        getNextProfile(currentUserId); //call function to move to next profile after liking
     })
     .catch(error => console.error("Error:", error));
 }

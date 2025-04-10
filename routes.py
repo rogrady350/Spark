@@ -78,8 +78,6 @@ def init_routes(app):
     #GET method for displaying other prfoiles
     @app.route("/api/view-recommendations", methods=["GET"])
     def view_recommendations_api():
-        print("vr-api VIEW RECOMMENDATIONS HIT")
-
         user_id = request.headers.get("User-Id")           #user's personal id
 
         last_seen_id = request.headers.get("Last-Seen-Id") #id of last seen profile
@@ -169,3 +167,5 @@ def init_routes(app):
 
         result = add_match(user_id, liked_user_id)
         return jsonify(result), 200
+    
+    

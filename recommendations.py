@@ -9,9 +9,6 @@ def calculate_compatibility(user, recommended_user):
     #increase score for closer age
     #absolute value to always get positive difference. cast to int to prevent crash from bad front end data. (need to update front end to store as int.)
     age_difference = abs(int(user["age"]) - int(recommended_user["age"])) 
-    #age debug
-    print(f"Scoring: {user.get('username')} vs {recommended_user.get('username')}")
-    print(f"User age: {user.get('age')}, Candidate age: {recommended_user.get('age')}")
     if age_difference < 3:
         score += 3
     elif age_difference < 7:
@@ -39,16 +36,30 @@ def get_ranked_recommendations(user_id):
         print("ERROR: User profile not found.")
         return []
 
-    print(f"grr Retrieved user data: {user}")
-    print(f"grr User match prefs: {user.get('matchPreferences')}, gender: {user.get('gender')}")
+    #do not show skipped, matched, and viewed profiles. #if any are none, fall back to empty list
+    #convert ObjectId from lists to string and store in set of unique uid's
+    #skipped and matched list stored under current user-id collection
+    skipped = [str(uid) for uid in user.get("skipped_users", [])]
+    matched = [str(uid) for uid in user.get("matched_users", [])]
 
-    #do not show skipped, matched, and viewed profiles
-    #if either liked or matched is none, fall back to empty list
-    skipped = user.get("liked_users") or []
-    matched = user.get("matched_profiles") or []
-    
-    #convert ObjectId from skipped and matched list to string and store in set of unique uid's
-    viewed = set(str(uid) for uid in skipped + matched)
+    #find users who were liked by the current user (where current user-id appears in others liked_users collection)
+    liked_cursor = profile_collection.find(
+        {"liked_users": ObjectId(user_id)},
+        {"_id": 1}
+    )
+    liked = [str(profile["_id"]) for profile in liked_cursor]
+
+    #debug whats being added to viewed set
+    print("users adding to viewed set:")
+    print("grr skipped:", skipped)
+    print("grr liked:", liked)
+    print("grr matched:", matched)
+
+    #build viewed set
+    print("DEBUG raw skipped_users from user object:", user.get("skipped_users", []))
+    print("DEBUG converted skipped list:", skipped)
+    viewed = set(skipped + liked + matched)
+    print("grr viewed list:", viewed) #debug the viewed list
 
     candidates_list = list(profile_collection.find({"_id": {"$ne": ObjectId(user_id)}}))
     #debug if pulling all users from db
@@ -57,12 +68,16 @@ def get_ranked_recommendations(user_id):
     # Remove password from all candidates early
     for candidate in candidates_list:
         candidate.pop("password", None)
+        candidate.pop("skipped_users", None)
+        candidate.pop("matched_users", None)
+        candidate.pop("liked_users", None)
 
     #create list of tuples of scored candiate users with their compatability score
     scored_candidates = []
 
     for c in candidates_list:
         #filter viewed
+        print("grr checking:", c["username"], str(c["_id"]))
         if str(c["_id"]) in viewed:
             print(f"Skipping {c['username']} (already viewed)")
             continue
@@ -76,26 +91,20 @@ def get_ranked_recommendations(user_id):
         #    continue
 
         #calculated compatibility of filtered list of users
-        print(f"grr Scoring {c['username']}")
         score = calculate_compatibility(user, c)
-        print(f"grr Score for {c['username']}: {score}")
 
         #only append users with some compatability (score > 0)
         if score > 0:
-            print(f"grr Score for {c['username']}: {score}")
             c["_id"] = str(c["_id"]) #convert ObjectId to string (for JSON serializaztion in frontend)
             scored_candidates.append((c,score))  #append 1 (profile, score) tuple per match
-
-    #debug users added to recommendation list
-    print("grr Final scored candidates:", [c[0]['username'] for c in scored_candidates])
 
     #sort candidates by score. anonymous lambda function gets score (second element) from list, highest ranked first
     scored_candidates.sort(key=lambda x: x[1], reverse=True)
 
     #print to verify candidate and rank are displaying accurate results
-    print("grr Ranked Recommendations:\n")
-    for rank, (candidate, score) in enumerate(scored_candidates, start=1): #get tuple from list
-        print(f"grr Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
+    #print("grr Ranked Recommendations:\n")
+    #for rank, (candidate, score) in enumerate(scored_candidates, start=1): #get tuple from list
+    #    print(f"grr Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
 
     #extract candidate profile (c) from linked list and return list of recommended users
     return [c for c, s in scored_candidates]
@@ -126,6 +135,10 @@ def get_next_profile(logged_in_user_id, last_seen_id=None):
             #display next profile if there are more left to display
             if profile["_id"] == last_seen_id and i+1 < len(recommendations):
                 return recommendations[i+1]
+            
+        print("grr last_seen_id not found in recommendations. Showing first available.")
+        if recommendations:
+            return recommendations[0]
             
     #return message once all profiles have been viewed
     return {"msg": "No more profiles to view"}
