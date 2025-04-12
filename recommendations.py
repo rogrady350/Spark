@@ -52,7 +52,7 @@ def get_ranked_recommendations(user_id):
     #debug
     print(f"grr Running recommendation logic for user ID: {user_id}")
 
-    user = get_profile(user_id)
+    user = get_profile(user_id, include_arrays=True)
     if "error" in user:
         print("ERROR: User profile not found.")
         return []

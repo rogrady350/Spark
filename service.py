@@ -51,7 +51,8 @@ def verify_password(username, password):
         return {"success": False, "msg": "Incorrect username or password"} #return false for username not in db
 
 #retrieve profile data from db (general purpose: logged in user or another user)
-def get_profile(user_id):
+#default to not send skip, like, match arrays (hide when sending to frontend)
+def get_profile(user_id, include_arrays=False):
     if not user_id:
         return {"error": "Unauthorized"} #handle error for no user_id provided
     
@@ -64,13 +65,18 @@ def get_profile(user_id):
     #find user profile
     user = profile_collection.find_one({"_id": user_object_id})
 
+    #convert ObjectId to a string - prevent JSON seirialization error
     if user:
         user["_id"] = str(user["_id"])
-        user.pop("password", None) #remove password
-        user.pop("skipped_users", None)
-        user.pop("liked_users", None)
-        user.pop("matched_users", None)
-        print("gp - Retrieved user data:", user) #debug
+
+        #if flag set to true (backend needs data for filtering), do not remove arrays
+        if not include_arrays:
+            user.pop("password", None) #remove password
+            user.pop("skipped_users", None)
+            user.pop("liked_users", None)
+            user.pop("matched_users", None)
+            print("gp - Retrieved user data:", user) #debug
+
         return user
 
     return {"error": "User not found"}

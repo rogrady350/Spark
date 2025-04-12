@@ -1,5 +1,5 @@
 from flask import render_template, request, jsonify
-from service import add_match, add_profile, get_liked_profile, remove_like, verify_password, get_profile, update_info, add_liked_profile
+from service import add_match, add_profile, get_liked_profile, remove_like, verify_password, get_profile, update_info, add_liked_profile, add_skipped_profile
 from recommendations import get_next_profile
 
 def init_routes(app):
@@ -156,8 +156,17 @@ def init_routes(app):
         data = request.get_json()
         skipped_user_id = data.get("skipped_user_id")
 
-        result = remove_like(user_id, skipped_user_id)
-        return jsonify(result), 200
+        #Always add to skipped_users (if skipping from either view-likes or view-recommendations)
+        add_result = add_skipped_profile(user_id, skipped_user_id)
+
+        #If viewing from view-likes page, also remove the user from likes list. No action if viewing from view-recommendations.
+        remove_result = remove_like(user_id, skipped_user_id)
+        
+        return jsonify({
+            "skip_result": add_result,
+            "like_removal_result": remove_result
+        }), 200
+    
     #POST - match button updates both user's matched_profile array with other user
     @app.route("/api/match-profile", methods=["POST"])
     def match_profile_api():
