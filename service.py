@@ -75,7 +75,6 @@ def get_profile(user_id, include_arrays=False):
             user.pop("skipped_users", None)
             user.pop("liked_users", None)
             user.pop("matched_users", None)
-            print("gp - Retrieved user data:", user) #debug
 
         return user
 
@@ -123,9 +122,6 @@ def add_skipped_profile(user_id, skipped_user_id):
         {"$addToSet": {"skipped_users": skipped_object_id}}
     )
 
-    print(f"Adding to skipped_profiles: {skipped_user_id} -> {user_id}")
-    print(profile_collection.find_one({"_id": user_object_id}, {"skipped_users": 1}))
-
     return {"msg": "Profile skipped successfully"}
 
 #add your (logged-in) user id to profile collection of liked user-id
@@ -138,10 +134,6 @@ def add_liked_profile(user_id, liked_user_id):
         liked_object_id = ObjectId(liked_user_id) #converted liked user's id
     except Exception:
         return {"error": "Invalid User ID"}
-    
-    #debug for skipping profiles
-    print(f"Adding to skipped_profiles: {liked_user_id} -> {user_id}")
-    print(profile_collection.find_one({"_id": user_object_id}, {"liked_profiles": 1}))
     
     #update liked user's db collection, add logged-in user to liked_users array
     result = profile_collection.update_one(

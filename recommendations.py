@@ -72,17 +72,8 @@ def get_ranked_recommendations(user_id):
     )
     liked = [str(profile["_id"]) for profile in liked_cursor]
 
-    #debug whats being added to viewed set
-    print("users adding to viewed set:")
-    print("grr skipped:", skipped)
-    print("grr liked:", liked)
-    print("grr matched:", matched)
-
     #build viewed set
-    print("DEBUG raw skipped_users from user object:", user.get("skipped_users", []))
-    print("DEBUG converted skipped list:", skipped)
     viewed = set(skipped + liked + matched)
-    print("grr viewed list:", viewed) #debug the viewed list
 
     candidates_list = list(profile_collection.find({"_id": {"$ne": ObjectId(user_id)}}))
     #debug if pulling all users from db
@@ -101,18 +92,16 @@ def get_ranked_recommendations(user_id):
     for c in candidates_list:
         c = normalize_profile(c) #normalize candidate before filtering
         #filter viewed
-        print("grr checking:", c["username"], str(c["_id"]))
         if str(c["_id"]) in viewed:
-            print(f"Skipping {c['username']} (already viewed)")
             continue
+
+        #only display recommended candidate if user and candidates matchPreferences are both satisfied by the other
         #filter desired gender matches of user
-        #if user.get("matchPreferences") and c.get("gender") not in user["matchPreferences"]:
-        #    print(f"Skipping {c['username']} | Candidate: {c['username']} gender: {c.get('gender')} (gender mismatch)")
-        #    continue
+        if user.get("matchPreferences") and c.get("gender") not in user["matchPreferences"]:
+            continue
         #filter desired gender matches of candidate users to user
-        #if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
-        #    print(f"Skipping {c['username']} (candidate doesn't match with user gender)")
-        #    continue
+        if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
+            continue
 
         #calculated compatibility of filtered list of users
         score = calculate_compatibility(user, c)
@@ -126,9 +115,9 @@ def get_ranked_recommendations(user_id):
     scored_candidates.sort(key=lambda x: x[1], reverse=True)
 
     #print to verify candidate and rank are displaying accurate results
-    #print("grr Ranked Recommendations:\n")
-    #for rank, (candidate, score) in enumerate(scored_candidates, start=1): #get tuple from list
-    #    print(f"grr Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
+    print("grr Ranked Recommendations:\n")
+    for rank, (candidate, score) in enumerate(scored_candidates, start=1): #get tuple from list
+        print(f"grr Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
 
     #extract candidate profile (c) from linked list and return list of recommended users
     return [c for c, s in scored_candidates]
