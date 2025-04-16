@@ -1,6 +1,7 @@
 #score weighted filtering methods
 from service import get_profile, profile_collection
 from bson import ObjectId
+import numpy as np
 
 #Normalize fields - adds default null values so empty fields don't cause crash
 DEFAULT_PROFILE_FIELDS = {
@@ -15,6 +16,41 @@ DEFAULT_PROFILE_FIELDS = {
     "matched_users": [],
     "liked_users": [],
 }
+
+#should add drinking/smoking options
+
+#Value lists for One Hot Encoding - convert categorical variables into binary
+GENDER_OPTIONS = ["male", "female", "nonbinary", "transgender"]
+POLITICS_OPTIONS = ["liberal", "moderate", "conservative"]
+RELIGION_OPTIONS = ["christian", "jewish", "muslim", "catholic", "atheist"]
+FAMILY_OPTIONS = ["want", "open", "unsure", "dont"]
+
+#Helper to build One Hot vectors. Assign index of option to vector
+def one_hot(value, options):
+    vector = []
+    if value not in options:
+        return None #skip "other" and "prefer not to say" in scoring
+
+    for option in options:
+        if value == option:
+            vector.append(1)
+        else:
+            vector.append(0)
+
+    return vector
+
+#Helper function for yes/no style questions (currently only haveChildren)
+def encode_boolean(value):
+    if value == "yes":
+        return 1
+    elif value == "no":
+        return 0
+    else:
+        return None #skip prefer not to say (or possibly an other in the furture) in scoring
+    
+#Helper function to create vector for a profile
+def profile_vector(profile):
+    
 
 #Helper function to normalize profiles
 def normalize_profile(profile):
