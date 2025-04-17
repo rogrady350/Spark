@@ -1,7 +1,7 @@
 #score weighted filtering methods
 from service import get_profile, profile_collection
 from bson import ObjectId
-import numpy as np
+import numpy as np #library for numerical computing
 
 #Normalize fields - adds default null values so empty fields don't cause crash
 DEFAULT_PROFILE_FIELDS = {
@@ -50,7 +50,33 @@ def encode_boolean(value):
     
 #Helper function to create vector for a profile
 def profile_vector(profile):
-    
+    try:
+        age = int(profile.get("age", 0))
+    except:
+        age = 0 #fall back for not possible age
+
+    #normalize age (assume max age of 100)
+    #ML algorithms work better when features are scaled - prevents large values from dominating
+    normalized_age = age/100
+
+    #vector encoding
+    #boolean: empty string if not filled out. 1 for have, 0 for don't, none for prefer not to say
+    have_children = encode_boolean(profile.get("haveChildren", ""), ["yes"]) 
+
+    #one_hot: empty string if not filled out. vector corresponding to response value
+    gender_vec = one_hot(profile.get("gender", ""), GENDER_OPTIONS)
+    politics_vec = one_hot(profile.get("politics", ""), POLITICS_OPTIONS)
+    religion_vec = one_hot(profile.get("religion", ""), RELIGION_OPTIONS)
+    family_vec = one_hot(profile.get("wantChildren", ""), FAMILY_OPTIONS)
+
+    #NumPy vector - gives you: fast math operations, shape control, numerical compatibility with ML models (cosine similarity)
+    #group scalars (age, booleans) and concatenate lists (one hot vectors) into one list
+    #ndarray - faster and more powerful list. supporsts multidimensial arrays. apply math to arrays without needing for loops
+    return np.array([normalized_age], have_children) +\
+          gender_vec +\
+          politics_vec +\
+          religion_vec +\
+          family_vec
 
 #Helper function to normalize profiles
 def normalize_profile(profile):
