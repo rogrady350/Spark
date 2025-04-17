@@ -78,6 +78,26 @@ def profile_vector(profile):
           religion_vec +\
           family_vec
 
+#determine cosine similarity - how close candidate user is to logged in user
+def cosine_similarity(profile1_vec, profile2_vec):
+    if profile1_vec is None or profile2_vec is None:
+        return 0
+    
+    #vectors MUST be sent as NumPy arrays to calculate dot products.
+    #profile_vector method returns np.array's
+    dot_product = np.dot(profile1_vec, profile2_vec)
+
+    #normalize vectors - calculate length (magnitude) of each vector
+    norm_profile1_vec = np.linalg.norm(profile1_vec)
+    norm_profile2_vec = np.linalg.norm(profile2_vec)
+
+    #safety check for a vector of zero - prevent divide by 0 exception
+    if norm_profile1_vec == 0 or norm_profile2_vec == 0:
+        return 0 #set similarity to 0
+    
+    #caluclate and return cosine similarity of 2 profiles - run formula
+    return dot_product / (norm_profile1_vec * norm_profile2_vec)
+
 #Helper function to normalize profiles
 def normalize_profile(profile):
     for field, default in DEFAULT_PROFILE_FIELDS.items():
