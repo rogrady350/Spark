@@ -29,7 +29,7 @@ FAMILY_OPTIONS = ["want", "open", "unsure", "dont"]
 def one_hot(value, options):
     vector = []
     if value not in options:
-        return None #skip "other" and "prefer not to say" in scoring
+        return [0] * len(options) #"other" and "prefer not to say" contribute no weight in scoring (vector all 0's)
 
     for option in options:
         if value == option:
@@ -46,7 +46,7 @@ def encode_boolean(value):
     elif value == "no":
         return 0
     else:
-        return None #skip prefer not to say (or possibly an other in the furture) in scoring
+        return 0.5 #keep "prefer not to say" neutral since 0 equates to no
     
 #Helper function to create vector for a profile
 def profile_vector(profile):
@@ -61,7 +61,7 @@ def profile_vector(profile):
 
     #vector encoding
     #boolean: empty string if not filled out. 1 for have, 0 for don't, none for prefer not to say
-    have_children = encode_boolean(profile.get("haveChildren", ""), ["yes"]) 
+    have_children = encode_boolean(profile.get("haveChildren", "")) 
 
     #one_hot: empty string if not filled out. vector corresponding to response value
     gender_vec = one_hot(profile.get("gender", ""), GENDER_OPTIONS)
@@ -72,11 +72,11 @@ def profile_vector(profile):
     #NumPy vector - gives you: fast math operations, shape control, numerical compatibility with ML models (cosine similarity)
     #group scalars (age, booleans) and concatenate lists (one hot vectors) into one list
     #ndarray - faster and more powerful list. supporsts multidimensial arrays. apply math to arrays without needing for loops
-    return np.array([normalized_age], have_children) +\
+    return np.array([normalized_age, have_children] +\
           gender_vec +\
           politics_vec +\
           religion_vec +\
-          family_vec
+          family_vec)
 
 #determine cosine similarity - how close candidate user is to logged in user
 def cosine_similarity(profile1_vec, profile2_vec):
@@ -127,7 +127,9 @@ def calculate_compatibility(user, recommended_user):
     if user["wantChildren"] == recommended_user["wantChildren"]:
         score += 2
 
-    return score
+    normalized_score = score/9 #divide by max possible score to normalize to value between 0 and 1. may not be ideal but ok for now
+
+    return normalized_score
 
 #use score to return list of recommendations
 def get_ranked_recommendations(user_id):
@@ -136,10 +138,12 @@ def get_ranked_recommendations(user_id):
 
     user = get_profile(user_id, include_arrays=True)
     if "error" in user:
-        print("ERROR: User profile not found.")
+        print("ERROR: User profile not found or missing required fields.")
         return []
     
     user = normalize_profile(user) #normalize after profile data retrieved
+    user_vec = profile_vector(user) #build logged in user vector
+    print(f"grr User Vector: {user_vec}")
 
     #do not show skipped, matched, and viewed profiles. #if any are none, fall back to empty list
     #convert ObjectId from lists to string and store in set of unique uid's
@@ -185,21 +189,21 @@ def get_ranked_recommendations(user_id):
         if c.get("matchPreferences") and user.get("gender") not in c["matchPreferences"]:
             continue
 
-        #calculated compatibility of filtered list of users
-        score = calculate_compatibility(user, c)
+        #hybrid model to include both manual score and ML score
+        candidate_vec = profile_vector(c) #build candidate profile vector
+        ml_score = cosine_similarity(user_vec, candidate_vec) #calculate similarity of user and candidate
+        manual_score = calculate_compatibility(user, c)
 
-        #only append users with some compatability (score > 0)
-        if score > 0:
+        combined_score = (0.7 * ml_score) + (0.3 * manual_score) #70% weight to ml score, 30% to manual score
+        print(f"grr Scored {c['username']}: ML={ml_score}, Manual={manual_score}, Combined={combined_score}")
+
+        #allow showing of users with low compatiability for diversity
+        if combined_score > 0.2:
             c["_id"] = str(c["_id"]) #convert ObjectId to string (for JSON serializaztion in frontend)
-            scored_candidates.append((c,score))  #append 1 (profile, score) tuple per match
+            scored_candidates.append((c, combined_score))  #append 1 tuple per match
 
     #sort candidates by score. anonymous lambda function gets score (second element) from list, highest ranked first
     scored_candidates.sort(key=lambda x: x[1], reverse=True)
-
-    #print to verify candidate and rank are displaying accurate results
-    print("grr Ranked Recommendations:\n")
-    for rank, (candidate, score) in enumerate(scored_candidates, start=1): #get tuple from list
-        print(f"grr Rankd {rank}: {candidate['username']} (Score): {score})")  #print candidate username and their rank
 
     #extract candidate profile (c) from linked list and return list of recommended users
     return [c for c, s in scored_candidates]
@@ -231,7 +235,6 @@ def get_next_profile(logged_in_user_id, last_seen_id=None):
             if profile["_id"] == last_seen_id and i+1 < len(recommendations):
                 return recommendations[i+1]
             
-        print("grr last_seen_id not found in recommendations. Showing first available.")
         if recommendations:
             return recommendations[0]
             

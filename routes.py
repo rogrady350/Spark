@@ -85,6 +85,7 @@ def init_routes(app):
         data = get_next_profile(user_id, last_seen_id)  #function to retrieve next recomended profile
 
         if "error" in data:
+            print("vr-api ERROR:", data["error"])
             status_code = (
                 404 if data["error"] == "User not found" else #id not found in db or no more profiles to view
                 401 #unauthorized, user id missing
