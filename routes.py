@@ -36,7 +36,7 @@ def init_routes(app):
     def view_likded_profile():
         return render_template("view-liked-profile.html")
     
-    #API routes for crud operations (handle front end requests)
+    #API routes for crud operations (handle frontend requests)
     #POST method for submitting data to db, server side create-account form
     @app.route("/api/create-account", methods=["POST"])
     def create_account_api():
