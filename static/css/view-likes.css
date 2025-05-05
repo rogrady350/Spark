@@ -1,0 +1,39 @@
+h2 {
+    font-family: 'Arial', sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: whitesmoke;
+    background-color: purple;
+    text-align: center;
+    margin: 0 auto 20px auto;
+    display: block;
+    width: 30%;
+    padding: 10px 0;
+}
+
+.table-container {
+    margin: 20px auto;
+    width: 80%;
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    text-align: center;
+    background-color: whitesmoke;
+    font-family: Arial, sans-serif;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th {
+    background-color: purple;
+    color: whitesmoke;
+    padding: 12px 15px;
+}
+
+.table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid #ddd;
+}
